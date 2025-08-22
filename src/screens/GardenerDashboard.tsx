@@ -12,6 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
 import FloatingPlantScanner from '../components/FloatingPlantScanner';
+import ChatBot from '../components/ChatBot';
 
 interface GardenerDashboardProps {
   navigation: any;
@@ -53,7 +54,7 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
       title: 'Garden Zones',
       subtitle: 'Manage your zones',
       icon: 'grid',
-      onPress: () => {},
+      onPress: () => navigation.navigate('GardenZones'),
     },
     {
       title: 'Plant Health Scanner',
@@ -77,13 +78,19 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
       title: 'Weather & Tips',
       subtitle: 'Weather & gardening tips',
       icon: 'sunny',
-      onPress: () => {},
+      onPress: () => navigation.navigate('WeatherTips'),
     },
     {
       title: 'Water Schedule',
       subtitle: 'View schedule',
       icon: 'time',
-      onPress: () => {},
+      onPress: () => navigation.navigate('WaterSchedule'),
+    },
+    {
+      title: 'Community',
+      subtitle: 'Share & learn together',
+      icon: 'people',
+      onPress: () => navigation.navigate('Community'),
     },
   ];
 
@@ -170,7 +177,10 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
             <Text style={styles.greeting}>Hello Gardener!</Text>
             <Text style={styles.userName}>Sarah's Garden</Text>
           </View>
-          <TouchableOpacity style={styles.profileButton}>
+          <TouchableOpacity 
+            style={styles.profileButton}
+            onPress={() => navigation.navigate('Settings')}
+          >
             <Ionicons name="person-circle" size={40} color={colors.surface} />
           </TouchableOpacity>
         </View>
@@ -187,7 +197,7 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Plant Care Reminders</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('PlantCareReminders')}>
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
           </View>
@@ -234,6 +244,7 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
         </View>
       </ScrollView>
       <FloatingPlantScanner navigation={navigation} />
+      <ChatBot />
     </View>
   );
 };

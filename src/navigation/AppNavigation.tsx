@@ -13,6 +13,12 @@ import SoilAnalysisScreen from '../screens/SoilAnalysisScreen';
 import PlantDiseaseDetection from '../screens/PlantDiseaseDetection';
 import ProductStore from '../screens/ProductStore';
 import Checkout from '../screens/Checkout';
+import WaterScheduleScreen from '../screens/WaterScheduleScreen';
+import SettingsScreen from '../screens/SettingsScreen';
+import PlantCareRemindersScreen from '../screens/PlantCareRemindersScreen';
+import WeatherTipsScreen from '../screens/WeatherTipsScreen';
+import GardenZonesScreen from '../screens/GardenZonesScreen';
+import CommunityScreen from '../screens/CommunityScreen';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -24,8 +30,16 @@ export type RootStackParamList = {
   DroneService: undefined;
   DroneServiceHistory: undefined;
   SoilAnalysis: undefined;
-  PlantDiseaseDetection: undefined;
+  PlantDiseaseDetection: {
+    capturedImage?: string;
+  } | undefined;
   ProductStore: undefined;
+  WaterSchedule: undefined;
+  Settings: undefined;
+  PlantCareReminders: undefined;
+  WeatherTips: undefined;
+  GardenZones: undefined;
+  Community: undefined;
   Checkout: {
     items: Array<{
       product: {
@@ -64,6 +78,12 @@ const AppNavigation: React.FC = () => {
         <Stack.Screen name="SoilAnalysis" component={SoilAnalysisScreen} />
         <Stack.Screen name="PlantDiseaseDetection" component={PlantDiseaseDetection} />
         <Stack.Screen name="ProductStore" component={ProductStore} />
+        <Stack.Screen name="WaterSchedule" component={WaterScheduleScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="PlantCareReminders" component={PlantCareRemindersScreen} />
+        <Stack.Screen name="WeatherTips" component={WeatherTipsScreen} />
+        <Stack.Screen name="GardenZones" component={GardenZonesScreen} />
+        <Stack.Screen name="Community" component={CommunityScreen} />
         <Stack.Screen name="Checkout" component={Checkout} />
       </Stack.Navigator>
     </NavigationContainer>

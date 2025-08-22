@@ -12,6 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
 import FloatingPlantScanner from '../components/FloatingPlantScanner';
+import ChatBot from '../components/ChatBot';
 
 interface FarmerDashboardProps {
   navigation: any;
@@ -83,7 +84,7 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
       title: 'Irrigation Schedule',
       subtitle: 'View & edit schedule',
       icon: 'calendar',
-      onPress: () => {},
+      onPress: () => navigation.navigate('WaterSchedule'),
     },
     {
       title: 'Weather Forecast',
@@ -235,6 +236,7 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
         </View>
       </ScrollView>
       <FloatingPlantScanner navigation={navigation} />
+      <ChatBot />
     </View>
   );
 };

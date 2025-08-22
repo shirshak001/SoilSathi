@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,7 @@ import CustomButton from '../components/CustomButton';
 
 interface PlantDiseaseDetectionProps {
   navigation: any;
+  route?: any;
 }
 
 interface PlantAnalysis {
@@ -64,13 +65,24 @@ interface Product {
   image: string;
 }
 
-const PlantDiseaseDetection: React.FC<PlantDiseaseDetectionProps> = ({ navigation }) => {
+const PlantDiseaseDetection: React.FC<PlantDiseaseDetectionProps> = ({ navigation, route }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<PlantAnalysis | null>(null);
   const [showImagePicker, setShowImagePicker] = useState(false);
   const [cart, setCart] = useState<Product[]>([]);
   const [activeTab, setActiveTab] = useState<'products' | 'organic'>('products');
+
+  // Handle captured image from floating scanner
+  useEffect(() => {
+    if (route?.params?.capturedImage) {
+      setSelectedImage(route.params.capturedImage);
+      // Auto-analyze the image
+      setTimeout(() => {
+        analyzeImage();
+      }, 500);
+    }
+  }, [route?.params?.capturedImage]);
 
   // Simulated plant analysis result
   const mockAnalysis: PlantAnalysis = {
