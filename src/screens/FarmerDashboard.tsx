@@ -11,6 +11,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
+import FloatingPlantScanner from '../components/FloatingPlantScanner';
 
 interface FarmerDashboardProps {
   navigation: any;
@@ -55,10 +56,28 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
       onPress: () => {},
     },
     {
+      title: 'Plant Health Scanner',
+      subtitle: 'Detect crop diseases',
+      icon: 'camera',
+      onPress: () => navigation.navigate('PlantDiseaseDetection'),
+    },
+    {
+      title: 'Soil Analysis',
+      subtitle: 'Check soil health',
+      icon: 'analytics',
+      onPress: () => navigation.navigate('SoilAnalysis'),
+    },
+    {
       title: 'Drone Services',
       subtitle: 'Book drone spraying',
       icon: 'airplane',
       onPress: () => navigation.navigate('DroneService'),
+    },
+    {
+      title: 'Product Store',
+      subtitle: 'Buy farming supplies',
+      icon: 'storefront',
+      onPress: () => navigation.navigate('ProductStore'),
     },
     {
       title: 'Irrigation Schedule',
@@ -120,7 +139,10 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
             <Text style={styles.greeting}>Good Morning!</Text>
             <Text style={styles.userName}>Farmer John</Text>
           </View>
-          <TouchableOpacity style={styles.profileButton}>
+          <TouchableOpacity 
+            style={styles.profileButton}
+            onPress={() => navigation.navigate('Settings')}
+          >
             <Ionicons name="person-circle" size={40} color={colors.surface} />
           </TouchableOpacity>
         </View>
@@ -212,6 +234,7 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
+      <FloatingPlantScanner navigation={navigation} />
     </View>
   );
 };

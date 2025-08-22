@@ -11,6 +11,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
+import FloatingPlantScanner from '../components/FloatingPlantScanner';
 
 interface GardenerDashboardProps {
   navigation: any;
@@ -55,10 +56,22 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
       onPress: () => {},
     },
     {
-      title: 'Plant Care',
-      subtitle: 'Care reminders',
-      icon: 'leaf',
-      onPress: () => {},
+      title: 'Plant Health Scanner',
+      subtitle: 'Detect diseases & pests',
+      icon: 'camera',
+      onPress: () => navigation.navigate('PlantDiseaseDetection'),
+    },
+    {
+      title: 'Soil Analysis',
+      subtitle: 'Check soil health',
+      icon: 'analytics',
+      onPress: () => navigation.navigate('SoilAnalysis'),
+    },
+    {
+      title: 'Product Store',
+      subtitle: 'Buy gardening supplies',
+      icon: 'storefront',
+      onPress: () => navigation.navigate('ProductStore'),
     },
     {
       title: 'Weather & Tips',
@@ -220,6 +233,7 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
           </View>
         </View>
       </ScrollView>
+      <FloatingPlantScanner navigation={navigation} />
     </View>
   );
 };

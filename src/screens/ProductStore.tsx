@@ -193,7 +193,7 @@ const ProductStore: React.FC<ProductStoreProps> = ({ navigation }) => {
   );
 
   const renderProduct = (product: Product) => (
-    <View style={styles.productCard}>
+    <View key={product.id} style={styles.productCard}>
       <View style={styles.productHeader}>
         <View style={styles.productImage}>
           <Ionicons name={product.image as keyof typeof Ionicons.glyphMap} size={32} color={colors.primary} />
@@ -328,11 +328,11 @@ const ProductStore: React.FC<ProductStoreProps> = ({ navigation }) => {
           style={styles.categoriesContainer}
           contentContainerStyle={styles.categoriesContent}
         >
-          {categories.map(renderCategory)}
+          {categories.map((category) => renderCategory(category))}
         </ScrollView>
 
         <View style={styles.productsGrid}>
-          {filteredProducts.map(renderProduct)}
+          {filteredProducts.map((product) => renderProduct(product))}
         </View>
       </ScrollView>
 
@@ -360,7 +360,7 @@ const ProductStore: React.FC<ProductStoreProps> = ({ navigation }) => {
             ) : (
               <>
                 <ScrollView style={styles.cartItems}>
-                  {cart.map(renderCartItem)}
+                  {cart.map((item) => renderCartItem(item))}
                 </ScrollView>
 
                 <View style={styles.cartFooter}>
