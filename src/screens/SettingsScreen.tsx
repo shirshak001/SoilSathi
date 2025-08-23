@@ -35,19 +35,19 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
           icon: 'person',
           title: 'Profile Information',
           subtitle: 'Update your personal details',
-          onPress: () => Alert.alert('Coming Soon', 'Profile settings will be available soon'),
+          onPress: () => navigation.navigate('Profile'),
         },
         {
           icon: 'shield-checkmark',
           title: 'Privacy & Security',
           subtitle: 'Manage your privacy settings',
-          onPress: () => Alert.alert('Coming Soon', 'Privacy settings will be available soon'),
+          onPress: () => navigation.navigate('PrivacySecurity'),
         },
         {
           icon: 'card',
           title: 'Payment Methods',
           subtitle: 'Manage payment options',
-          onPress: () => Alert.alert('Coming Soon', 'Payment settings will be available soon'),
+          onPress: () => navigation.navigate('PaymentMethods'),
         },
       ]
     },

@@ -15,6 +15,9 @@ import ProductStore from '../screens/ProductStore';
 import Checkout from '../screens/Checkout';
 import WaterScheduleScreen from '../screens/WaterScheduleScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import PrivacySecurityScreen from '../screens/PrivacySecurityScreen';
+import PaymentMethodsScreen from '../screens/PaymentMethodsScreen';
 import PlantCareRemindersScreen from '../screens/PlantCareRemindersScreen';
 import WeatherTipsScreen from '../screens/WeatherTipsScreen';
 import GardenZonesScreen from '../screens/GardenZonesScreen';
@@ -36,6 +39,9 @@ export type RootStackParamList = {
   ProductStore: undefined;
   WaterSchedule: undefined;
   Settings: undefined;
+  Profile: undefined;
+  PrivacySecurity: undefined;
+  PaymentMethods: undefined;
   PlantCareReminders: undefined;
   WeatherTips: undefined;
   GardenZones: undefined;
@@ -80,6 +86,9 @@ const AppNavigation: React.FC = () => {
         <Stack.Screen name="ProductStore" component={ProductStore} />
         <Stack.Screen name="WaterSchedule" component={WaterScheduleScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="PrivacySecurity" component={PrivacySecurityScreen} />
+        <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
         <Stack.Screen name="PlantCareReminders" component={PlantCareRemindersScreen} />
         <Stack.Screen name="WeatherTips" component={WeatherTipsScreen} />
         <Stack.Screen name="GardenZones" component={GardenZonesScreen} />
