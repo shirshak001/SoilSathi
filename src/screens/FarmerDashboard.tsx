@@ -10,9 +10,10 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
-import FloatingPlantScanner from '../components/FloatingPlantScanner';
+import { useTheme } from '../contexts/ThemeContext';
+import { spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
 import ChatBot from '../components/ChatBot';
+import FloatingPlantScanner from '../components/FloatingPlantScanner';
 
 interface FarmerDashboardProps {
   navigation: any;
@@ -22,6 +23,258 @@ const { width } = Dimensions.get('window');
 const cardWidth = (width - spacing.lg * 3) / 2;
 
 const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
+  const { theme } = useTheme();
+  const colors = theme.colors;
+
+  const getStyles = () => StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    headerGradient: {
+      paddingTop: StatusBar.currentHeight || spacing.xl,
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: spacing.lg,
+      paddingHorizontal: spacing.lg,
+    },
+    headerLeft: {
+      flex: 1,
+    },
+    greeting: {
+      fontSize: fontSize.md,
+      color: colors.surface,
+      opacity: 0.9,
+    },
+    userName: {
+      fontSize: fontSize.xl,
+      fontWeight: fontWeight.bold,
+      color: colors.surface,
+    },
+    profileButton: {
+      padding: spacing.xs,
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: spacing.lg,
+    },
+    section: {
+      marginBottom: spacing.xl,
+    },
+    sectionTitle: {
+      fontSize: fontSize.lg,
+      fontWeight: fontWeight.bold,
+      color: colors.text.primary,
+      marginBottom: spacing.md,
+    },
+    sectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: spacing.md,
+    },
+    seeAllText: {
+      fontSize: fontSize.sm,
+      color: colors.primary,
+      fontWeight: fontWeight.medium,
+    },
+    statsContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+    },
+    statCard: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.lg,
+      padding: spacing.lg,
+      width: cardWidth,
+      marginBottom: spacing.md,
+      elevation: 2,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    statIconContainer: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: spacing.sm,
+    },
+    statValue: {
+      fontSize: fontSize.xl,
+      fontWeight: fontWeight.bold,
+      color: colors.text.primary,
+      marginBottom: spacing.xs / 2,
+    },
+    statTitle: {
+      fontSize: fontSize.sm,
+      color: colors.text.secondary,
+    },
+    fieldStatusCard: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.lg,
+      padding: spacing.lg,
+      elevation: 2,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    fieldRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: spacing.md,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    fieldInfo: {
+      flex: 1,
+    },
+    fieldName: {
+      fontSize: fontSize.md,
+      fontWeight: fontWeight.medium,
+      color: colors.text.primary,
+    },
+    fieldStatus: {
+      fontSize: fontSize.sm,
+      color: colors.text.secondary,
+      marginTop: spacing.xs / 2,
+    },
+    statusIndicator: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      marginLeft: spacing.sm,
+    },
+    droneCard: {
+      marginTop: spacing.md,
+      borderRadius: borderRadius.lg,
+      overflow: 'hidden',
+      elevation: 4,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 6,
+    },
+    droneGradient: {
+      borderRadius: borderRadius.md,
+      padding: spacing.lg,
+    },
+    droneContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    droneLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
+    },
+    droneInfo: {
+      marginLeft: spacing.md,
+      flex: 1,
+    },
+    droneTitle: {
+      fontSize: fontSize.md,
+      fontWeight: fontWeight.bold,
+      color: colors.surface,
+      marginBottom: spacing.xs / 2,
+    },
+    droneSubtitle: {
+      fontSize: fontSize.sm,
+      color: colors.surface,
+      opacity: 0.9,
+      marginBottom: spacing.xs,
+    },
+    dronePrice: {
+      fontSize: fontSize.sm,
+      fontWeight: fontWeight.semibold,
+      color: colors.surface,
+    },
+    droneButton: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.sm,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    droneButtonText: {
+      fontSize: fontSize.sm,
+      fontWeight: fontWeight.semibold,
+      color: colors.primary,
+      marginRight: spacing.xs,
+    },
+    actionsContainer: {
+      gap: spacing.sm,
+    },
+    actionCard: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.md,
+      padding: spacing.md,
+      flexDirection: 'row',
+      alignItems: 'center',
+      elevation: 2,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    actionIconContainer: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: colors.background,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: spacing.md,
+    },
+    actionContent: {
+      flex: 1,
+    },
+    actionTitle: {
+      fontSize: fontSize.md,
+      fontWeight: fontWeight.medium,
+      color: colors.text.primary,
+    },
+    actionSubtitle: {
+      fontSize: fontSize.sm,
+      color: colors.text.secondary,
+      marginTop: spacing.xs / 2,
+    },
+    droneServiceCard: {
+      borderRadius: borderRadius.md,
+      elevation: 3,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+      shadowOpacity: 0.15,
+      shadowRadius: 5,
+    },
+  });
+
+  const styles = getStyles();
+  
   const statsData = [
     {
       title: 'Active Fields',
@@ -100,15 +353,7 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
     },
   ];
 
-  const renderStatCard = (stat: typeof statsData[0], index: number) => (
-    <View key={index} style={styles.statCard}>
-      <View style={[styles.statIconContainer, { backgroundColor: stat.color }]}>
-        <Ionicons name={stat.icon as keyof typeof Ionicons.glyphMap} size={24} color={colors.surface} />
-      </View>
-      <Text style={styles.statValue}>{stat.value}</Text>
-      <Text style={styles.statTitle}>{stat.title}</Text>
-    </View>
-  );
+  
 
   const renderQuickAction = (action: typeof quickActions[0], index: number) => (
     <TouchableOpacity
@@ -126,6 +371,15 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
       </View>
       <Ionicons name="chevron-forward" size={20} color={colors.text.hint} />
     </TouchableOpacity>
+  );
+  const renderStatCard = (stat: typeof statsData[0], index: number) => (
+    <View key={index} style={styles.statCard}>
+      <View style={[styles.statIconContainer, { backgroundColor: stat.color }]}>
+        <Ionicons name={stat.icon as keyof typeof Ionicons.glyphMap} size={24} color={colors.surface} />
+      </View>
+      <Text style={styles.statValue}>{stat.value}</Text>
+      <Text style={styles.statTitle}>{stat.title}</Text>
+    </View>
   );
 
   return (
@@ -240,238 +494,5 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  headerGradient: {
-    paddingTop: StatusBar.currentHeight || spacing.xl,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: spacing.lg,
-    paddingHorizontal: spacing.lg,
-  },
-  headerLeft: {
-    flex: 1,
-  },
-  greeting: {
-    fontSize: fontSize.md,
-    color: colors.surface,
-    opacity: 0.9,
-  },
-  userName: {
-    fontSize: fontSize.xl,
-    fontWeight: fontWeight.bold,
-    color: colors.surface,
-  },
-  profileButton: {
-    padding: spacing.xs,
-  },
-  content: {
-    flex: 1,
-  },
-  section: {
-    padding: spacing.lg,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: spacing.md,
-  },
-  sectionTitle: {
-    fontSize: fontSize.lg,
-    fontWeight: fontWeight.semibold,
-    color: colors.text.primary,
-    marginBottom: spacing.md,
-  },
-  seeAllText: {
-    fontSize: fontSize.sm,
-    color: colors.primary,
-    fontWeight: fontWeight.medium,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.md,
-  },
-  statCard: {
-    width: cardWidth,
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
-    alignItems: 'center',
-    elevation: 2,
-    shadowColor: colors.shadow,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  statIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: spacing.sm,
-  },
-  statValue: {
-    fontSize: fontSize.xl,
-    fontWeight: fontWeight.bold,
-    color: colors.text.primary,
-  },
-  statTitle: {
-    fontSize: fontSize.xs,
-    color: colors.text.secondary,
-    textAlign: 'center',
-  },
-  fieldStatusCard: {
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
-    elevation: 2,
-    shadowColor: colors.shadow,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  fieldRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  fieldInfo: {
-    flex: 1,
-  },
-  fieldName: {
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.medium,
-    color: colors.text.primary,
-  },
-  fieldStatus: {
-    fontSize: fontSize.sm,
-    color: colors.text.secondary,
-    marginTop: spacing.xs / 2,
-  },
-  statusIndicator: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-  },
-  actionsContainer: {
-    gap: spacing.sm,
-  },
-  actionCard: {
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
-    flexDirection: 'row',
-    alignItems: 'center',
-    elevation: 2,
-    shadowColor: colors.shadow,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  actionIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.background,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: spacing.md,
-  },
-  actionContent: {
-    flex: 1,
-  },
-  actionTitle: {
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.medium,
-    color: colors.text.primary,
-  },
-  actionSubtitle: {
-    fontSize: fontSize.sm,
-    color: colors.text.secondary,
-    marginTop: spacing.xs / 2,
-  },
-  droneServiceCard: {
-    borderRadius: borderRadius.md,
-    elevation: 3,
-    shadowColor: colors.shadow,
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 5,
-  },
-  droneGradient: {
-    borderRadius: borderRadius.md,
-    padding: spacing.lg,
-  },
-  droneContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  droneLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  droneInfo: {
-    marginLeft: spacing.md,
-    flex: 1,
-  },
-  droneTitle: {
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.bold,
-    color: colors.surface,
-    marginBottom: spacing.xs / 2,
-  },
-  droneSubtitle: {
-    fontSize: fontSize.sm,
-    color: colors.surface,
-    opacity: 0.9,
-    marginBottom: spacing.xs,
-  },
-  dronePrice: {
-    fontSize: fontSize.sm,
-    fontWeight: fontWeight.semibold,
-    color: colors.surface,
-  },
-  droneButton: {
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.sm,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  droneButtonText: {
-    fontSize: fontSize.sm,
-    fontWeight: fontWeight.semibold,
-    color: colors.primary,
-    marginRight: spacing.xs,
-  },
-});
 
 export default FarmerDashboard;

@@ -11,17 +11,21 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
+import { useTheme } from '../contexts/ThemeContext';
+import ThemeToggle from '../components/ThemeToggle';
+import { spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
 
 interface SettingsScreenProps {
   navigation: any;
 }
 
 const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
+  const { theme } = useTheme();
+  const colors = theme.colors;
+  
   const [notifications, setNotifications] = useState(true);
   const [autoWatering, setAutoWatering] = useState(false);
   const [weatherAlerts, setWeatherAlerts] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
 
   const settingsItems = [
     {
@@ -90,14 +94,6 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
     {
       category: 'App Preferences',
       items: [
-        {
-          icon: 'moon',
-          title: 'Dark Mode',
-          subtitle: 'Switch to dark theme',
-          hasSwitch: true,
-          value: darkMode,
-          onToggle: setDarkMode,
-        },
         {
           icon: 'language',
           title: 'Language',
@@ -168,6 +164,85 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
     }
   ];
 
+  const getStyles = () => StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    headerGradient: {
+      paddingTop: StatusBar.currentHeight || spacing.xl,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: spacing.lg,
+      paddingHorizontal: spacing.lg,
+    },
+    backButton: {
+      padding: spacing.sm,
+    },
+    headerTitle: {
+      flex: 1,
+      fontSize: fontSize.xl,
+      fontWeight: fontWeight.bold,
+      color: colors.surface,
+      textAlign: 'center',
+    },
+    placeholder: {
+      width: 40,
+    },
+    content: {
+      flex: 1,
+      padding: spacing.lg,
+    },
+    category: {
+      marginBottom: spacing.xl,
+    },
+    categoryTitle: {
+      fontSize: fontSize.md,
+      fontWeight: fontWeight.bold,
+      color: colors.text.primary,
+      marginBottom: spacing.md,
+      paddingHorizontal: spacing.sm,
+    },
+    categoryItems: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.md,
+      overflow: 'hidden',
+    },
+    settingItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: spacing.md,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    settingIcon: {
+      width: 40,
+      height: 40,
+      borderRadius: borderRadius.sm,
+      backgroundColor: colors.background,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: spacing.md,
+    },
+    settingContent: {
+      flex: 1,
+    },
+    settingTitle: {
+      fontSize: fontSize.md,
+      fontWeight: fontWeight.medium,
+      color: colors.text.primary,
+    },
+    settingSubtitle: {
+      fontSize: fontSize.sm,
+      color: colors.text.secondary,
+      marginTop: spacing.xs / 2,
+    },
+  });
+
+  const styles = getStyles();
+
   const renderSettingItem = (item: any) => (
     <TouchableOpacity
       key={item.title}
@@ -233,87 +308,18 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
       </LinearGradient>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Theme Toggle Section */}
+        <View style={styles.category}>
+          <Text style={[styles.categoryTitle, { color: colors.text.primary }]}>Appearance</Text>
+          <View style={styles.categoryItems}>
+            <ThemeToggle variant="switch" showLabel={true} />
+          </View>
+        </View>
+        
         {settingsItems.map(renderCategory)}
       </ScrollView>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  headerGradient: {
-    paddingTop: StatusBar.currentHeight || spacing.xl,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: spacing.lg,
-    paddingHorizontal: spacing.lg,
-  },
-  backButton: {
-    padding: spacing.sm,
-  },
-  headerTitle: {
-    flex: 1,
-    fontSize: fontSize.xl,
-    fontWeight: fontWeight.bold,
-    color: colors.surface,
-    textAlign: 'center',
-  },
-  placeholder: {
-    width: 40,
-  },
-  content: {
-    flex: 1,
-    padding: spacing.lg,
-  },
-  category: {
-    marginBottom: spacing.xl,
-  },
-  categoryTitle: {
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.bold,
-    color: colors.text.primary,
-    marginBottom: spacing.md,
-    paddingHorizontal: spacing.sm,
-  },
-  categoryItems: {
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.md,
-    overflow: 'hidden',
-  },
-  settingItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  settingIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: borderRadius.sm,
-    backgroundColor: colors.background,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: spacing.md,
-  },
-  settingContent: {
-    flex: 1,
-  },
-  settingTitle: {
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.medium,
-    color: colors.text.primary,
-  },
-  settingSubtitle: {
-    fontSize: fontSize.sm,
-    color: colors.text.secondary,
-    marginTop: spacing.xs / 2,
-  },
-});
 
 export default SettingsScreen;

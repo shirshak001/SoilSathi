@@ -91,7 +91,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             <Ionicons name="leaf" size={40} color={colors.surface} />
             <Text style={styles.appName}>SoilSathi</Text>
           </View>
-          <Text style={styles.tagline}>Smart Soil Irrigation</Text>
+          <Text style={styles.tagline}></Text>
         </View>
       </LinearGradient>
 
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.medium,
   },
   loginButton: {
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
   },
   dividerContainer: {
     flexDirection: 'row',

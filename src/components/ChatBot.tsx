@@ -31,7 +31,7 @@ const ChatBot: React.FC<ChatBotProps> = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Hello! 👋 I\'m your gardening assistant. I can help you with plant care, pest problems, watering schedules, and more. How can I assist you today?',
+      text: 'Hello! I\'m your gardening assistant. I can help you with plant care, pest problems, watering schedules, and more. How can I assist you today?',
       isUser: false,
       timestamp: new Date(),
     }
@@ -273,7 +273,7 @@ const ChatBot: React.FC<ChatBotProps> = () => {
                 </View>
                 <View>
                   <Text style={styles.chatTitle}>Garden Assistant</Text>
-                  <Text style={styles.chatSubtitle}>🤖 AI Powered • Always Online</Text>
+                  <Text style={styles.chatSubtitle}>AI Powered • Always Online</Text>
                 </View>
               </View>
               <TouchableOpacity
@@ -326,7 +326,7 @@ const ChatBot: React.FC<ChatBotProps> = () => {
 const styles = StyleSheet.create({
   floatingButton: {
     position: 'absolute',
-    bottom: spacing.xl + 70, // Above the plant scanner button
+    bottom: spacing.lg, // Below the plant scanner button
     right: spacing.lg,
     zIndex: 1000,
   },

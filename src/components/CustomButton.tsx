@@ -9,7 +9,8 @@ import {
   TextStyle,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { colors, spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
+import { useTheme } from '../contexts/ThemeContext';
+import { spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
 
 interface CustomButtonProps extends TouchableOpacityProps {
   title: string;
@@ -32,6 +33,9 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   disabled,
   ...props
 }) => {
+  const { theme } = useTheme();
+  const colors = theme.colors;
+
   const getButtonHeight = () => {
     switch (size) {
       case 'small':
@@ -56,26 +60,59 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 
   const isDisabled = disabled || loading;
 
-  const buttonStyles = [
-    styles.button,
+  const getButtonStyles = () => [
     {
       height: getButtonHeight(),
+      borderRadius: borderRadius.md,
+      justifyContent: 'center' as const,
+      alignItems: 'center' as const,
+      flexDirection: 'row' as const,
+      paddingHorizontal: spacing.lg,
+      backgroundColor: colors.primary,
+      elevation: 2,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 3,
       ...(fullWidth && { width: '100%' as const }),
     },
-    variant === 'outline' && styles.outlineButton,
-    variant === 'secondary' && styles.secondaryButton,
-    isDisabled && styles.disabledButton,
+    variant === 'outline' && {
+      backgroundColor: 'transparent',
+      borderWidth: 2,
+      borderColor: colors.primary,
+      elevation: 0,
+      shadowOpacity: 0,
+    },
+    variant === 'secondary' && {
+      backgroundColor: colors.secondary,
+    },
+    isDisabled && {
+      backgroundColor: colors.border,
+      elevation: 0,
+      shadowOpacity: 0,
+    },
     buttonStyle,
   ];
 
-  const textStyles = [
-    styles.text,
+  const getTextStyles = () => [
     {
       fontSize: getTextSize(),
+      fontWeight: fontWeight.semibold,
+      color: colors.surface,
+      textAlign: 'center' as const,
     },
-    variant === 'outline' && styles.outlineText,
-    variant === 'secondary' && styles.secondaryText,
-    isDisabled && styles.disabledText,
+    variant === 'outline' && {
+      color: colors.primary,
+    },
+    variant === 'secondary' && {
+      color: colors.surface,
+    },
+    isDisabled && {
+      color: colors.text.disabled,
+    },
     textStyle,
   ];
 
@@ -85,19 +122,26 @@ const CustomButton: React.FC<CustomButtonProps> = ({
         <ActivityIndicator
           size="small"
           color={variant === 'outline' ? colors.primary : colors.surface}
-          style={styles.loader}
+          style={{ marginRight: spacing.sm }}
         />
       )}
-      <Text style={textStyles}>{title}</Text>
+      <Text style={getTextStyles()}>{title}</Text>
     </>
   );
 
   if (variant === 'primary' && !isDisabled) {
     return (
-      <TouchableOpacity {...props} disabled={isDisabled} style={buttonStyles}>
+      <TouchableOpacity {...props} disabled={isDisabled} style={getButtonStyles()}>
         <LinearGradient
-          colors={[colors.primaryLight, colors.primary]}
-          style={styles.gradient}
+          colors={[colors.primary, colors.primary]}
+          style={{
+            flex: 1,
+            borderRadius: borderRadius.md,
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+            paddingHorizontal: spacing.lg,
+          }}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
@@ -108,69 +152,10 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   }
 
   return (
-    <TouchableOpacity {...props} disabled={isDisabled} style={buttonStyles}>
+    <TouchableOpacity {...props} disabled={isDisabled} style={getButtonStyles()}>
       <ButtonContent />
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  button: {
-    borderRadius: borderRadius.md,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingHorizontal: spacing.lg,
-    backgroundColor: colors.primary,
-    elevation: 2,
-    shadowColor: colors.shadow,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-  },
-  gradient: {
-    flex: 1,
-    borderRadius: borderRadius.md,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingHorizontal: spacing.lg,
-  },
-  secondaryButton: {
-    backgroundColor: colors.secondary,
-  },
-  outlineButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: colors.primary,
-    elevation: 0,
-    shadowOpacity: 0,
-  },
-  disabledButton: {
-    backgroundColor: colors.border,
-    elevation: 0,
-    shadowOpacity: 0,
-  },
-  text: {
-    fontWeight: fontWeight.semibold,
-    color: colors.surface,
-    textAlign: 'center',
-  },
-  secondaryText: {
-    color: colors.surface,
-  },
-  outlineText: {
-    color: colors.primary,
-  },
-  disabledText: {
-    color: colors.text.disabled,
-  },
-  loader: {
-    marginRight: spacing.sm,
-  },
-});
 
 export default CustomButton;

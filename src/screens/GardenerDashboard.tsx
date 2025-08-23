@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
+import { spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
+import { useTheme } from '../contexts/ThemeContext';
 import FloatingPlantScanner from '../components/FloatingPlantScanner';
 import ChatBot from '../components/ChatBot';
 
@@ -22,6 +23,309 @@ const { width } = Dimensions.get('window');
 const cardWidth = (width - spacing.lg * 3) / 2;
 
 const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => {
+  const { theme } = useTheme();
+  const { colors } = theme;
+
+  const getStyles = () => StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    headerGradient: {
+      paddingTop: StatusBar.currentHeight || spacing.xl,
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: spacing.lg,
+      paddingHorizontal: spacing.lg,
+    },
+    headerLeft: {
+      flex: 1,
+    },
+    greeting: {
+      fontSize: fontSize.md,
+      color: colors.surface,
+      opacity: 0.9,
+    },
+    userName: {
+      fontSize: fontSize.xl,
+      fontWeight: fontWeight.bold,
+      color: colors.surface,
+    },
+    profileButton: {
+      padding: spacing.xs,
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: spacing.lg,
+    },
+    section: {
+      marginBottom: spacing.xl,
+    },
+    sectionTitle: {
+      fontSize: fontSize.lg,
+      fontWeight: fontWeight.bold,
+      color: colors.text.primary,
+      marginBottom: spacing.md,
+    },
+    statsContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+    },
+    statCard: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.lg,
+      padding: spacing.lg,
+      width: cardWidth,
+      marginBottom: spacing.md,
+      elevation: 2,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    statIconContainer: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: spacing.sm,
+    },
+    statValue: {
+      fontSize: fontSize.xl,
+      fontWeight: fontWeight.bold,
+      color: colors.text.primary,
+      marginBottom: spacing.xs / 2,
+    },
+    statTitle: {
+      fontSize: fontSize.sm,
+      color: colors.text.secondary,
+    },
+    quickActionsGrid: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.lg,
+      padding: spacing.md,
+      elevation: 2,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    actionRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: spacing.md,
+    },
+    actionItem: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: spacing.md,
+      marginHorizontal: spacing.xs,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    actionIcon: {
+      marginRight: spacing.md,
+    },
+    actionContent: {
+      flex: 1,
+    },
+    actionTitle: {
+      fontSize: fontSize.md,
+      fontWeight: fontWeight.medium,
+      color: colors.text.primary,
+    },
+    actionSubtitle: {
+      fontSize: fontSize.sm,
+      color: colors.text.secondary,
+      marginTop: spacing.xs / 2,
+    },
+    reminderCard: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.lg,
+      padding: spacing.lg,
+      marginBottom: spacing.md,
+      elevation: 2,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    reminderHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: spacing.md,
+    },
+    reminderPriority: {
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+      marginRight: spacing.md,
+    },
+    reminderTitle: {
+      fontSize: fontSize.md,
+      fontWeight: fontWeight.bold,
+      color: colors.text.primary,
+      flex: 1,
+    },
+    reminderTime: {
+      fontSize: fontSize.sm,
+      color: colors.text.secondary,
+    },
+    reminderDescription: {
+      fontSize: fontSize.sm,
+      color: colors.text.secondary,
+      marginTop: spacing.xs,
+    },
+    actionCard: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.md,
+      padding: spacing.md,
+      flexDirection: 'row',
+      alignItems: 'center',
+      elevation: 2,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    actionIconContainer: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: colors.background,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: spacing.md,
+    },
+    sectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: spacing.md,
+    },
+    seeAllText: {
+      fontSize: fontSize.sm,
+      color: colors.primary,
+      fontWeight: fontWeight.medium,
+    },
+    reminderRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: spacing.sm,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    reminderInfo: {
+      flex: 1,
+    },
+    plantName: {
+      fontSize: fontSize.md,
+      fontWeight: fontWeight.medium,
+      color: colors.text.primary,
+    },
+    reminderTask: {
+      fontSize: fontSize.sm,
+      color: colors.text.secondary,
+      marginTop: spacing.xs / 2,
+    },
+    reminderRight: {
+      alignItems: 'flex-end',
+    },
+    priorityIndicator: {
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+      marginTop: spacing.xs,
+    },
+    remindersCard: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.md,
+      padding: spacing.md,
+      elevation: 2,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    weatherCard: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.md,
+      padding: spacing.lg,
+      elevation: 2,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    weatherMain: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: spacing.md,
+    },
+    weatherInfo: {
+      marginLeft: spacing.md,
+      flex: 1,
+    },
+    temperature: {
+      fontSize: fontSize.xxl,
+      fontWeight: fontWeight.bold,
+      color: colors.text.primary,
+    },
+    weatherDesc: {
+      fontSize: fontSize.md,
+      color: colors.text.secondary,
+      marginTop: spacing.xs / 2,
+    },
+    weatherDetails: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    weatherDetail: {
+      alignItems: 'center',
+    },
+    weatherDetailText: {
+      fontSize: fontSize.sm,
+      color: colors.text.secondary,
+      marginTop: spacing.xs / 2,
+    },
+    weatherTip: {
+      fontSize: fontSize.sm,
+      color: colors.text.secondary,
+      marginTop: spacing.md,
+      fontStyle: 'italic',
+    },
+    actionsContainer: {
+      gap: spacing.sm,
+    },
+  });
+
+  const styles = getStyles();
+
   const statsData = [
     {
       title: 'Garden Zones',
@@ -248,238 +552,5 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  headerGradient: {
-    paddingTop: StatusBar.currentHeight || spacing.xl,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: spacing.lg,
-    paddingHorizontal: spacing.lg,
-  },
-  headerLeft: {
-    flex: 1,
-  },
-  greeting: {
-    fontSize: fontSize.md,
-    color: colors.surface,
-    opacity: 0.9,
-  },
-  userName: {
-    fontSize: fontSize.xl,
-    fontWeight: fontWeight.bold,
-    color: colors.surface,
-  },
-  profileButton: {
-    padding: spacing.xs,
-  },
-  content: {
-    flex: 1,
-  },
-  section: {
-    padding: spacing.lg,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: spacing.md,
-  },
-  sectionTitle: {
-    fontSize: fontSize.lg,
-    fontWeight: fontWeight.semibold,
-    color: colors.text.primary,
-    marginBottom: spacing.md,
-  },
-  seeAllText: {
-    fontSize: fontSize.sm,
-    color: colors.primary,
-    fontWeight: fontWeight.medium,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.md,
-  },
-  statCard: {
-    width: cardWidth,
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
-    alignItems: 'center',
-    elevation: 2,
-    shadowColor: colors.shadow,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  statIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: spacing.sm,
-  },
-  statValue: {
-    fontSize: fontSize.xl,
-    fontWeight: fontWeight.bold,
-    color: colors.text.primary,
-  },
-  statTitle: {
-    fontSize: fontSize.xs,
-    color: colors.text.secondary,
-    textAlign: 'center',
-  },
-  remindersCard: {
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
-    elevation: 2,
-    shadowColor: colors.shadow,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  reminderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  reminderInfo: {
-    flex: 1,
-  },
-  plantName: {
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.medium,
-    color: colors.text.primary,
-  },
-  reminderTask: {
-    fontSize: fontSize.sm,
-    color: colors.text.secondary,
-    marginTop: spacing.xs / 2,
-  },
-  reminderRight: {
-    alignItems: 'flex-end',
-  },
-  reminderTime: {
-    fontSize: fontSize.sm,
-    color: colors.text.secondary,
-    marginBottom: spacing.xs / 2,
-  },
-  priorityIndicator: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  weatherCard: {
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
-    elevation: 2,
-    shadowColor: colors.shadow,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  weatherMain: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: spacing.md,
-  },
-  weatherInfo: {
-    marginLeft: spacing.md,
-  },
-  temperature: {
-    fontSize: fontSize.xxl,
-    fontWeight: fontWeight.bold,
-    color: colors.text.primary,
-  },
-  weatherDesc: {
-    fontSize: fontSize.md,
-    color: colors.text.secondary,
-  },
-  weatherDetails: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: spacing.md,
-  },
-  weatherDetail: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  weatherDetailText: {
-    fontSize: fontSize.sm,
-    color: colors.text.secondary,
-    marginLeft: spacing.xs,
-  },
-  weatherTip: {
-    fontSize: fontSize.sm,
-    color: colors.text.secondary,
-    fontStyle: 'italic',
-    backgroundColor: colors.background,
-    padding: spacing.sm,
-    borderRadius: borderRadius.sm,
-  },
-  actionsContainer: {
-    gap: spacing.sm,
-  },
-  actionCard: {
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.md,
-    padding: spacing.md,
-    flexDirection: 'row',
-    alignItems: 'center',
-    elevation: 2,
-    shadowColor: colors.shadow,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  actionIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.background,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: spacing.md,
-  },
-  actionContent: {
-    flex: 1,
-  },
-  actionTitle: {
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.medium,
-    color: colors.text.primary,
-  },
-  actionSubtitle: {
-    fontSize: fontSize.sm,
-    color: colors.text.secondary,
-    marginTop: spacing.xs / 2,
-  },
-});
 
 export default GardenerDashboard;
