@@ -13,6 +13,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
 
 interface ProfileScreenProps {
@@ -35,6 +36,7 @@ interface ProfileSection {
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   const { theme } = useTheme();
   const colors = theme.colors;
+  const { translations } = useLanguage();
 
   // Dummy user data
   const [userProfile, setUserProfile] = useState({

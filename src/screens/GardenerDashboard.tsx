@@ -12,6 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
 import { useTheme } from '../contexts/ThemeContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import FloatingPlantScanner from '../components/FloatingPlantScanner';
 import ChatBot from '../components/ChatBot';
 
@@ -25,6 +26,7 @@ const cardWidth = (width - spacing.lg * 3) / 2;
 const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => {
   const { theme } = useTheme();
   const { colors } = theme;
+  const { translations } = useLanguage();
 
   const getStyles = () => StyleSheet.create({
     container: {
@@ -535,7 +537,7 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
               </View>
             </View>
             <Text style={styles.weatherTip}>
-              💡 Good day for outdoor gardening! Consider watering in the evening.
+              Good day for outdoor gardening! Consider watering in the evening.
             </Text>
           </View>
         </View>

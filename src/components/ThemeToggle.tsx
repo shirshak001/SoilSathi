@@ -11,7 +11,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
 
 interface ThemeToggleProps {
-  variant?: 'switch' | 'button';
+  variant?: 'switch' | 'button' | 'inline';
   showLabel?: boolean;
 }
 
@@ -20,6 +20,21 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
   showLabel = true 
 }) => {
   const { theme, isDark, toggleTheme } = useTheme();
+
+  if (variant === 'inline') {
+    return (
+      <Switch
+        value={isDark}
+        onValueChange={toggleTheme}
+        trackColor={{
+          false: theme.colors.border,
+          true: theme.colors.primaryLight,
+        }}
+        thumbColor={isDark ? theme.colors.primary : theme.colors.text.hint}
+        ios_backgroundColor={theme.colors.border}
+      />
+    );
+  }
 
   if (variant === 'button') {
     return (

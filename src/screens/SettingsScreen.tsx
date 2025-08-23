@@ -12,7 +12,9 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
+import { useLanguage, supportedLanguages } from '../contexts/LanguageContext';
 import ThemeToggle from '../components/ThemeToggle';
+import LanguageSelector from '../components/LanguageSelector';
 import { spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
 
 interface SettingsScreenProps {
@@ -22,50 +24,54 @@ interface SettingsScreenProps {
 const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
   const { theme } = useTheme();
   const colors = theme.colors;
+  const { translations, language } = useLanguage();
   
   const [notifications, setNotifications] = useState(true);
   const [autoWatering, setAutoWatering] = useState(false);
   const [weatherAlerts, setWeatherAlerts] = useState(true);
 
+  // Get current language info
+  const currentLanguage = supportedLanguages.find(lang => lang.code === language);
+
   const settingsItems = [
     {
-      category: 'Account',
+      category: translations.settings.account,
       items: [
         {
           icon: 'person',
-          title: 'Profile Information',
-          subtitle: 'Update your personal details',
+          title: translations.settings.profileInfo,
+          subtitle: translations.settings.updateDetails,
           onPress: () => navigation.navigate('Profile'),
         },
         {
           icon: 'shield-checkmark',
-          title: 'Privacy & Security',
-          subtitle: 'Manage your privacy settings',
+          title: translations.settings.privacySec,
+          subtitle: translations.settings.managePrivacy,
           onPress: () => navigation.navigate('PrivacySecurity'),
         },
         {
           icon: 'card',
-          title: 'Payment Methods',
-          subtitle: 'Manage payment options',
+          title: translations.settings.paymentMethods,
+          subtitle: translations.settings.managePayments,
           onPress: () => navigation.navigate('PaymentMethods'),
         },
       ]
     },
     {
-      category: 'Notifications',
+      category: translations.settings.notifications,
       items: [
         {
           icon: 'notifications',
-          title: 'Push Notifications',
-          subtitle: 'Receive important updates',
+          title: translations.settings.pushNotifications,
+          subtitle: translations.settings.importantUpdates,
           hasSwitch: true,
           value: notifications,
           onToggle: setNotifications,
         },
         {
           icon: 'cloud-done',
-          title: 'Weather Alerts',
-          subtitle: 'Get weather notifications',
+          title: translations.settings.weatherAlerts,
+          subtitle: translations.settings.weatherNotifications,
           hasSwitch: true,
           value: weatherAlerts,
           onToggle: setWeatherAlerts,
@@ -73,85 +79,91 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
       ]
     },
     {
-      category: 'Automation',
+      category: translations.settings.automation,
       items: [
         {
           icon: 'water',
-          title: 'Auto Watering',
-          subtitle: 'Enable automatic watering system',
+          title: translations.settings.autoWatering,
+          subtitle: translations.settings.automaticWatering,
           hasSwitch: true,
           value: autoWatering,
           onToggle: setAutoWatering,
         },
         {
           icon: 'analytics',
-          title: 'Smart Monitoring',
-          subtitle: 'AI-powered plant monitoring',
-          onPress: () => Alert.alert('Coming Soon', 'Smart monitoring settings will be available soon'),
+          title: translations.settings.smartMonitoring,
+          subtitle: translations.settings.aiMonitoring,
+          onPress: () => Alert.alert(translations.messages.comingSoon, translations.messages.featureAvailable),
         },
       ]
     },
     {
-      category: 'App Preferences',
+      category: translations.settings.preferences,
       items: [
         {
           icon: 'language',
-          title: 'Language',
-          subtitle: 'English (US)',
-          onPress: () => Alert.alert('Coming Soon', 'Language settings will be available soon'),
+          title: translations.settings.language,
+          subtitle: `${currentLanguage?.name || 'English'} (${currentLanguage?.nativeName || 'English'})`,
+          hasLanguageSelector: true,
         },
         {
           icon: 'location',
-          title: 'Location Services',
-          subtitle: 'Enable location for weather data',
-          onPress: () => Alert.alert('Coming Soon', 'Location settings will be available soon'),
+          title: translations.settings.locationServices,
+          subtitle: translations.settings.weatherLocation,
+          onPress: () => Alert.alert(translations.messages.comingSoon, translations.messages.featureAvailable),
+        },
+        {
+          icon: 'contrast',
+          title: translations.settings.appearance,
+          subtitle: translations.settings.theme,
+          hasThemeToggle: true,
         },
       ]
     },
     {
-      category: 'Support',
+      category: translations.settings.support,
       items: [
         {
           icon: 'help-circle',
-          title: 'Help & FAQ',
-          subtitle: 'Get help and support',
+          title: translations.settings.helpFaq,
+          subtitle: translations.settings.getHelp,
           onPress: () => Alert.alert('Help', 'For support, please contact us at support@soilsathi.com'),
         },
         {
           icon: 'chatbubble',
-          title: 'Contact Support',
-          subtitle: 'Reach out to our team',
+          title: translations.settings.contactSupport,
+          subtitle: translations.settings.reachTeam,
           onPress: () => Alert.alert('Contact', 'Email: support@soilsathi.com\nPhone: +1-234-567-8900'),
         },
         {
           icon: 'star',
-          title: 'Rate the App',
-          subtitle: 'Share your feedback',
+          title: translations.settings.rateApp,
+          subtitle: translations.settings.shareFeeback,
           onPress: () => Alert.alert('Thank You!', 'Your feedback helps us improve'),
         },
         {
           icon: 'information-circle',
-          title: 'About',
-          subtitle: 'App version and info',
+          title: translations.settings.about,
+          subtitle: translations.settings.appVersion,
           onPress: () => Alert.alert('SoilSathi', 'Version 1.0.0\nYour smart agriculture companion'),
         },
       ]
     },
     {
-      category: 'Account Actions',
+      category: translations.settings.accountActions,
       items: [
         {
           icon: 'log-out',
-          title: 'Sign Out',
-          subtitle: 'Log out of your account',
+          title: translations.settings.signOut,
+          subtitle: translations.settings.logOut,
           onPress: () => {
             Alert.alert(
-              'Sign Out',
-              'Are you sure you want to sign out?',
+              translations.settings.signOut,
+              translations.messages.confirmSignOut,
               [
-                { text: 'Cancel', style: 'cancel' },
+                { text: translations.common.cancel, style: 'cancel' },
                 { 
-                  text: 'Sign Out', 
+                  text: translations.settings.signOut, 
                   style: 'destructive',
                   onPress: () => navigation.navigate('Login')
                 }
@@ -247,8 +259,9 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
     <TouchableOpacity
       key={item.title}
       style={styles.settingItem}
-      onPress={item.onPress}
+      onPress={item.hasLanguageSelector || item.hasThemeToggle ? undefined : item.onPress}
       disabled={item.hasSwitch}
+      activeOpacity={item.hasLanguageSelector || item.hasThemeToggle || item.hasSwitch ? 1 : 0.7}
     >
       <View style={styles.settingIcon}>
         <Ionicons 
@@ -273,6 +286,10 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
           trackColor={{ false: colors.border, true: colors.primaryLight }}
           thumbColor={item.value ? colors.primary : colors.text.hint}
         />
+      ) : item.hasLanguageSelector ? (
+        <LanguageSelector showButton={false} />
+      ) : item.hasThemeToggle ? (
+        <ThemeToggle variant="inline" />
       ) : (
         <Ionicons name="chevron-forward" size={20} color={colors.text.hint} />
       )}
@@ -302,20 +319,12 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
           >
             <Ionicons name="arrow-back" size={24} color={colors.surface} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Settings</Text>
+          <Text style={styles.headerTitle}>{translations.settings.title}</Text>
           <View style={styles.placeholder} />
         </View>
       </LinearGradient>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Theme Toggle Section */}
-        <View style={styles.category}>
-          <Text style={[styles.categoryTitle, { color: colors.text.primary }]}>Appearance</Text>
-          <View style={styles.categoryItems}>
-            <ThemeToggle variant="switch" showLabel={true} />
-          </View>
-        </View>
-        
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>        
         {settingsItems.map(renderCategory)}
       </ScrollView>
     </View>
