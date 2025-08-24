@@ -542,7 +542,7 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
           </View>
         </View>
 
-        <View style={styles.section}>
+        <View style={[styles.section, { paddingTop: 2, paddingHorizontal: 3, paddingBottom: 1 }]}>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.actionsContainer}>
             {quickActions.map(renderQuickAction)}
