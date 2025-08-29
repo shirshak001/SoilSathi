@@ -15,9 +15,7 @@ import { spacing, borderRadius, fontSize, fontWeight } from '../constants/theme'
 import ChatBot from '../components/ChatBot';
 import FloatingPlantScanner from '../components/FloatingPlantScanner';
 import VoiceAssistant from '../components/VoiceAssistant';
-import WeatherForecast from '../components/WeatherForecast';
 import FieldSummary from '../components/FieldSummary';
-import ReportsAnalytics from '../components/ReportsAnalytics';
 
 interface FarmerDashboardProps {
   navigation: any;
@@ -347,13 +345,13 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
       title: 'Weather Forecast',
       subtitle: 'Check weather data',
       icon: 'cloudy',
-      onPress: () => {},
+      onPress: () => navigation.navigate('WeatherForecastScreen'),
     },
     {
       title: 'Reports & Analytics',
       subtitle: 'View detailed reports',
       icon: 'bar-chart',
-      onPress: () => {},
+      onPress: () => navigation.navigate('ReportsAnalyticsScreen'),
     },
   ];
 
@@ -415,14 +413,8 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Weather Forecast */}
-        <WeatherForecast onPress={() => navigation.navigate('WeatherForecastScreen')} />
-
         {/* Field Summary */}
         <FieldSummary onPress={() => navigation.navigate('FieldManagement')} />
-
-        {/* Reports and Analytics */}
-        <ReportsAnalytics navigation={navigation} />
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
