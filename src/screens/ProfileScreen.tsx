@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
+import LocationServices from '../components/LocationServices';
 
 interface ProfileScreenProps {
   navigation: any;
@@ -369,6 +370,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             ))}
           </View>
         ))}
+
+        {/* Location Services Section */}
+        <LocationServices navigation={navigation} />
 
         {isEditing && (
           <TouchableOpacity style={styles.saveButton} onPress={handleSave}>

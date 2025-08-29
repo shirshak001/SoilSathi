@@ -17,6 +17,7 @@ import FloatingPlantScanner from '../components/FloatingPlantScanner';
 import VoiceAssistant from '../components/VoiceAssistant';
 import WeatherForecast from '../components/WeatherForecast';
 import FieldSummary from '../components/FieldSummary';
+import ReportsAnalytics from '../components/ReportsAnalytics';
 
 interface FarmerDashboardProps {
   navigation: any;
@@ -415,10 +416,13 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
         </View>
 
         {/* Weather Forecast */}
-        <WeatherForecast onPress={() => navigation.navigate('WeatherTips')} />
+        <WeatherForecast onPress={() => navigation.navigate('WeatherForecastScreen')} />
 
         {/* Field Summary */}
         <FieldSummary onPress={() => navigation.navigate('FieldManagement')} />
+
+        {/* Reports and Analytics */}
+        <ReportsAnalytics navigation={navigation} />
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
