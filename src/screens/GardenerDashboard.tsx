@@ -358,6 +358,36 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
 
   const quickActions = [
     {
+      title: 'Virtual Garden Planner',
+      subtitle: 'Design your garden',
+      icon: 'map',
+      onPress: () => navigation.navigate('VirtualGardenPlanner'),
+    },
+    {
+      title: 'Indoor Plant Care',
+      subtitle: 'Light detection & care',
+      icon: 'bulb',
+      onPress: () => navigation.navigate('IndoorPlantCareMode'),
+    },
+    {
+      title: 'Gardener Social Map',
+      subtitle: 'Connect with gardeners',
+      icon: 'location',
+      onPress: () => navigation.navigate('GardenerSocialMap'),
+    },
+    {
+      title: 'AI Mood Plants',
+      subtitle: 'Plants for your mood',
+      icon: 'happy',
+      onPress: () => navigation.navigate('AIMoodPlants'),
+    },
+    {
+      title: 'Seasonal Suggestions',
+      subtitle: 'Season-based plants',
+      icon: 'flower',
+      onPress: () => navigation.navigate('SeasonalAestheticSuggestions'),
+    },
+    {
       title: 'Garden Zones',
       subtitle: 'Manage your zones',
       icon: 'grid',
@@ -543,10 +573,23 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
           </View>
         </View>
 
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="star" size={20} color={colors.warning} style={{ marginRight: spacing.sm }} />
+              <Text style={styles.sectionTitle}>New Advanced Features</Text>
+            </View>
+          </View>
+          
+          <View style={styles.actionsContainer}>
+            {quickActions.slice(0, 5).map(renderQuickAction)}
+          </View>
+        </View>
+
         <View style={[styles.section, { paddingTop: 2, paddingHorizontal: 3, paddingBottom: 1 }]}>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.actionsContainer}>
-            {quickActions.map(renderQuickAction)}
+            {quickActions.slice(5).map(renderQuickAction)}
           </View>
         </View>
       </ScrollView>

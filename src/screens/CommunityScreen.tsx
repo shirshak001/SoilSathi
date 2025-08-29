@@ -60,7 +60,7 @@ const CommunityScreen: React.FC<CommunityScreenProps> = ({ navigation }) => {
         verified: true,
         location: 'New Delhi, India'
       },
-      content: 'My tomatoes are finally ready for harvest! 🍅 This is my first time growing them from seeds. Any tips for storing them properly?',
+      content: 'My tomatoes are finally ready for harvest! This is my first time growing them from seeds. Any tips for storing them properly?',
       images: ['https://via.placeholder.com/300x200'],
       tags: ['tomatoes', 'harvest', 'firsttime'],
       timestamp: '2 hours ago',

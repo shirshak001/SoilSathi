@@ -25,6 +25,11 @@ import CommunityScreen from '../screens/CommunityScreen';
 import FieldManagementScreen from '../screens/FieldManagementScreen';
 import WeatherForecastScreen from '../screens/WeatherForecastScreen';
 import ReportsAnalyticsScreen from '../screens/ReportsAnalyticsScreen';
+import VirtualGardenPlannerScreen from '../screens/VirtualGardenPlannerScreen';
+import IndoorPlantCareModeScreen from '../screens/IndoorPlantCareModeScreen';
+import GardenerSocialMapScreen from '../screens/GardenerSocialMapScreen';
+import AIMoodPlantsScreen from '../screens/AIMoodPlantsScreen';
+import SeasonalAestheticSuggestionsScreen from '../screens/SeasonalAestheticSuggestionsScreen';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -52,6 +57,11 @@ export type RootStackParamList = {
   FieldManagement: undefined;
   WeatherForecastScreen: undefined;
   ReportsAnalyticsScreen: undefined;
+  VirtualGardenPlanner: undefined;
+  IndoorPlantCareMode: undefined;
+  GardenerSocialMap: undefined;
+  AIMoodPlants: undefined;
+  SeasonalAestheticSuggestions: undefined;
   Checkout: {
     items: Array<{
       product: {
@@ -102,6 +112,11 @@ const AppNavigation: React.FC = () => {
         <Stack.Screen name="FieldManagement" component={FieldManagementScreen} />
         <Stack.Screen name="WeatherForecastScreen" component={WeatherForecastScreen} />
         <Stack.Screen name="ReportsAnalyticsScreen" component={ReportsAnalyticsScreen} />
+        <Stack.Screen name="VirtualGardenPlanner" component={VirtualGardenPlannerScreen} />
+        <Stack.Screen name="IndoorPlantCareMode" component={IndoorPlantCareModeScreen} />
+        <Stack.Screen name="GardenerSocialMap" component={GardenerSocialMapScreen} />
+        <Stack.Screen name="AIMoodPlants" component={AIMoodPlantsScreen} />
+        <Stack.Screen name="SeasonalAestheticSuggestions" component={SeasonalAestheticSuggestionsScreen} />
         <Stack.Screen name="Checkout" component={Checkout} />
       </Stack.Navigator>
     </NavigationContainer>

@@ -446,7 +446,10 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({ onPress }) => {
       {/* Farming Advice */}
       <View style={styles.advice}>
         <Text style={styles.adviceText}>
-          💡 {getWeatherAdvice()}
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Ionicons name="bulb" size={16} color={colors.warning} style={{ marginRight: spacing.xs }} />
+            <Text style={styles.adviceText}>{getWeatherAdvice()}</Text>
+          </View>
         </Text>
       </View>
     </TouchableOpacity>

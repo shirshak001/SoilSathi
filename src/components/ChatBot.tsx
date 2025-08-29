@@ -131,7 +131,7 @@ const ChatBot: React.FC<ChatBotProps> = () => {
     } else if (message.includes('hello') || message.includes('hi') || message.includes('help')) {
       return "Hello! I'm here to help with all your gardening questions. You can ask me about watering, fertilizing, pest control, plant diseases, harvesting, soil care, and much more!";
     } else if (message.includes('thank')) {
-      return "You're welcome! Happy gardening! 🌱 Feel free to ask me anything else about your plants.";
+      return "You're welcome! Happy gardening! Feel free to ask me anything else about your plants.";
     } else if (message.includes('tomato')) {
       return "Tomatoes need full sun, consistent watering, and support structures. Watch for blight and hornworms. Harvest when fruits are firm but fully colored!";
     } else if (message.includes('basil') || message.includes('herb')) {
