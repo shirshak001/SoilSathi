@@ -487,7 +487,10 @@ const PlantDiseaseDetection: React.FC<PlantDiseaseDetectionProps> = ({ navigatio
 
       {remedy.tips && remedy.tips.length > 0 && (
         <View style={styles.tipsSection}>
-          <Text style={styles.sectionSubtitle}>💡 Pro Tips:</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: spacing.md }}>
+            <Ionicons name="bulb" size={18} color={colors.warning} style={{ marginRight: spacing.sm }} />
+            <Text style={styles.sectionSubtitle}>Pro Tips:</Text>
+          </View>
           {remedy.tips.map((tip, index) => (
             <Text key={index} style={styles.organicTipItem}>• {tip}</Text>
           ))}
@@ -648,7 +651,10 @@ const PlantDiseaseDetection: React.FC<PlantDiseaseDetectionProps> = ({ navigatio
 
           {activeTab === 'organic' && issue.organicRemedies && issue.organicRemedies.length > 0 && (
             <View style={styles.tabContent}>
-              <Text style={styles.tabContentTitle}>🌿 Homemade Organic Remedies</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: spacing.md }}>
+                <Ionicons name="leaf" size={18} color={colors.success} style={{ marginRight: spacing.sm }} />
+                <Text style={styles.tabContentTitle}>Homemade Organic Remedies</Text>
+              </View>
               {issue.organicRemedies.map(renderOrganicRemedy)}
             </View>
           )}
