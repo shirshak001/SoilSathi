@@ -220,8 +220,8 @@ const FloatingPlantScanner: React.FC<FloatingPlantScannerProps> = ({ navigation 
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: spacing.xl,
-    right: spacing.lg,
+    bottom: 100,
+    right: 20,
     alignItems: 'center',
   },
   mainButton: {

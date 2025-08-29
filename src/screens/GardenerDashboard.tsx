@@ -15,6 +15,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import FloatingPlantScanner from '../components/FloatingPlantScanner';
 import ChatBot from '../components/ChatBot';
+import VoiceAssistant from '../components/VoiceAssistant';
 
 interface GardenerDashboardProps {
   navigation: any;
@@ -114,7 +115,7 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
       backgroundColor: colors.surface,
       borderRadius: borderRadius.lg,
       padding: spacing.md,
-      elevation: 2,
+      elevation: 4,
       shadowColor: colors.shadow,
       shadowOffset: {
         width: 0,
@@ -550,6 +551,7 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
         </View>
       </ScrollView>
       <FloatingPlantScanner navigation={navigation} />
+      <VoiceAssistant navigation={navigation} />
       <ChatBot />
     </View>
   );

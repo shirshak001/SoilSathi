@@ -22,6 +22,7 @@ import PlantCareRemindersScreen from '../screens/PlantCareRemindersScreen';
 import WeatherTipsScreen from '../screens/WeatherTipsScreen';
 import GardenZonesScreen from '../screens/GardenZonesScreen';
 import CommunityScreen from '../screens/CommunityScreen';
+import FieldManagementScreen from '../screens/FieldManagementScreen';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -46,6 +47,7 @@ export type RootStackParamList = {
   WeatherTips: undefined;
   GardenZones: undefined;
   Community: undefined;
+  FieldManagement: undefined;
   Checkout: {
     items: Array<{
       product: {
@@ -93,6 +95,7 @@ const AppNavigation: React.FC = () => {
         <Stack.Screen name="WeatherTips" component={WeatherTipsScreen} />
         <Stack.Screen name="GardenZones" component={GardenZonesScreen} />
         <Stack.Screen name="Community" component={CommunityScreen} />
+        <Stack.Screen name="FieldManagement" component={FieldManagementScreen} />
         <Stack.Screen name="Checkout" component={Checkout} />
       </Stack.Navigator>
     </NavigationContainer>

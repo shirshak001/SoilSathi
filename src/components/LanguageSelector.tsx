@@ -43,7 +43,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       padding: spacing.md,
       backgroundColor: colors.surface,
       borderRadius: borderRadius.md,
-      borderWidth: 1,
+      borderWidth: 3,
       borderColor: colors.border,
     },
     flagText: {

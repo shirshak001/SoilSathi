@@ -14,6 +14,9 @@ import { useTheme } from '../contexts/ThemeContext';
 import { spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
 import ChatBot from '../components/ChatBot';
 import FloatingPlantScanner from '../components/FloatingPlantScanner';
+import VoiceAssistant from '../components/VoiceAssistant';
+import WeatherForecast from '../components/WeatherForecast';
+import FieldSummary from '../components/FieldSummary';
 
 interface FarmerDashboardProps {
   navigation: any;
@@ -307,7 +310,7 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
       title: 'Field Management',
       subtitle: 'Monitor all fields',
       icon: 'map',
-      onPress: () => {},
+      onPress: () => navigation.navigate('FieldManagement'),
     },
     {
       title: 'Plant Health Scanner',
@@ -411,6 +414,12 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
           </View>
         </View>
 
+        {/* Weather Forecast */}
+        <WeatherForecast onPress={() => navigation.navigate('WeatherTips')} />
+
+        {/* Field Summary */}
+        <FieldSummary onPress={() => navigation.navigate('FieldManagement')} />
+
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Field Status</Text>
@@ -490,6 +499,7 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
         </View>
       </ScrollView>
       <FloatingPlantScanner navigation={navigation} />
+      <VoiceAssistant navigation={navigation} />
       <ChatBot />
     </View>
   );

@@ -326,8 +326,8 @@ const ChatBot: React.FC<ChatBotProps> = () => {
 const styles = StyleSheet.create({
   floatingButton: {
     position: 'absolute',
-    bottom: spacing.lg, // Below the plant scanner button
-    right: spacing.lg,
+    bottom: 30, // Below the plant scanner button
+    right: 20,
     zIndex: 1000,
   },
   chatButton: {
