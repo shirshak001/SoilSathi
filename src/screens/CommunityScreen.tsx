@@ -96,7 +96,7 @@ const CommunityScreen: React.FC<CommunityScreenProps> = ({ navigation }) => {
         verified: true,
         location: 'Bangalore, India'
       },
-      content: 'Pro tip: Coffee grounds make excellent fertilizer for acid-loving plants like blueberries and azaleas! ☕️ Just sprinkle used grounds around the base.',
+      content: 'Pro tip: Coffee grounds make excellent fertilizer for acid-loving plants like blueberries and azaleas! Just sprinkle used grounds around the base.',
       images: [],
       tags: ['tips', 'fertilizer', 'coffee', 'blueberries'],
       timestamp: '1 day ago',

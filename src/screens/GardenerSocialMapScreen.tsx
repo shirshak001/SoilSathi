@@ -92,7 +92,7 @@ const GardenerSocialMapScreen: React.FC<GardenerSocialMapScreenProps> = ({ navig
     {
       id: '1',
       name: 'Priya Sharma',
-      avatar: '👩‍🌾',
+      avatar: 'person-circle',
       distance: 0.8,
       specialties: ['Roses', 'Herbs', 'Organic farming'],
       rating: 4.8,
@@ -125,7 +125,7 @@ const GardenerSocialMapScreen: React.FC<GardenerSocialMapScreenProps> = ({ navig
     {
       id: '2',
       name: 'Raj Patel',
-      avatar: '👨‍🌾',
+      avatar: 'person-circle',
       distance: 1.2,
       specialties: ['Succulents', 'Indoor plants', 'Hydroponics'],
       rating: 4.6,
@@ -149,7 +149,7 @@ const GardenerSocialMapScreen: React.FC<GardenerSocialMapScreenProps> = ({ navig
     {
       id: '3',
       name: 'Anita Singh',
-      avatar: '👵',
+      avatar: 'person-circle',
       distance: 2.1,
       specialties: ['Vegetables', 'Medicinal plants', 'Composting'],
       rating: 4.9,
@@ -182,7 +182,7 @@ const GardenerSocialMapScreen: React.FC<GardenerSocialMapScreenProps> = ({ navig
     {
       id: '4',
       name: 'Vikram Kumar',
-      avatar: '👨‍🎓',
+      avatar: 'school',
       distance: 3.5,
       specialties: ['Flowering plants', 'Landscaping', 'Native plants'],
       rating: 4.4,
@@ -496,6 +496,15 @@ const GardenerSocialMapScreen: React.FC<GardenerSocialMapScreenProps> = ({ navig
     },
     avatar: {
       fontSize: 32,
+      marginRight: spacing.md,
+    },
+    avatarContainer: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: colors.primaryLight,
+      justifyContent: 'center',
+      alignItems: 'center',
       marginRight: spacing.md,
     },
     gardenerInfo: {
@@ -813,6 +822,12 @@ const GardenerSocialMapScreen: React.FC<GardenerSocialMapScreenProps> = ({ navig
       marginBottom: spacing.md,
       textAlign: 'center',
     },
+    modalHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: spacing.lg,
+      justifyContent: 'center',
+    },
     closeButton: {
       backgroundColor: colors.primary,
       borderRadius: borderRadius.md,
@@ -861,7 +876,9 @@ const GardenerSocialMapScreen: React.FC<GardenerSocialMapScreenProps> = ({ navig
       {getFilteredGardeners().map((gardener) => (
         <View key={gardener.id} style={styles.gardenerCard}>
           <View style={styles.gardenerHeader}>
-            <Text style={styles.avatar}>{gardener.avatar}</Text>
+            <View style={styles.avatarContainer}>
+              <Ionicons name={gardener.avatar as any} size={24} color={colors.primary} />
+            </View>
             <View style={styles.gardenerInfo}>
               <Text style={styles.gardenerName}>{gardener.name}</Text>
               <Text style={styles.gardenerDistance}>{gardener.distance} km away</Text>
@@ -951,7 +968,9 @@ const GardenerSocialMapScreen: React.FC<GardenerSocialMapScreenProps> = ({ navig
             <Text style={styles.exchangeDescription}>{exchange.description}</Text>
 
             <View style={styles.exchangeOwner}>
-              <Text style={styles.avatar}>{gardener.avatar}</Text>
+              <View style={styles.avatarContainer}>
+                <Ionicons name={gardener.avatar as any} size={20} color={colors.primary} />
+              </View>
               <Text style={styles.ownerName}>{gardener.name}</Text>
               <Text style={styles.gardenerDistance}> • {gardener.distance} km away</Text>
             </View>
@@ -1095,9 +1114,14 @@ const GardenerSocialMapScreen: React.FC<GardenerSocialMapScreenProps> = ({ navig
           <View style={styles.modalContent}>
             {selectedGardener && (
               <>
-                <Text style={styles.modalTitle}>
-                  {selectedGardener.avatar} {selectedGardener.name}
-                </Text>
+                <View style={styles.modalHeader}>
+                  <View style={styles.avatarContainer}>
+                    <Ionicons name={selectedGardener.avatar as any} size={24} color={colors.primary} />
+                  </View>
+                  <Text style={styles.modalTitle}>
+                    {selectedGardener.name}
+                  </Text>
+                </View>
                 
                 <ScrollView style={{ maxHeight: height * 0.6 }}>
                   <Text style={styles.eventDescription}>

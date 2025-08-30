@@ -30,6 +30,10 @@ import IndoorPlantCareModeScreen from '../screens/IndoorPlantCareModeScreen';
 import GardenerSocialMapScreen from '../screens/GardenerSocialMapScreen';
 import AIMoodPlantsScreen from '../screens/AIMoodPlantsScreen';
 import SeasonalAestheticSuggestionsScreen from '../screens/SeasonalAestheticSuggestionsScreen';
+import InteractiveLearningGamesScreen from '../screens/InteractiveLearningGamesScreen';
+import ARSoilExplorerScreen from '../screens/ARSoilExplorerScreen';
+import SoilHealthTipsScreen from '../screens/SoilHealthTipsScreen';
+import SoilSuperheroStoryScreen from '../screens/SoilSuperheroStoryScreen';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -62,6 +66,10 @@ export type RootStackParamList = {
   GardenerSocialMap: undefined;
   AIMoodPlants: undefined;
   SeasonalAestheticSuggestions: undefined;
+  InteractiveLearningGames: undefined;
+  ARSoilExplorer: undefined;
+  SoilHealthTips: undefined;
+  SoilSuperheroStory: undefined;
   Checkout: {
     items: Array<{
       product: {
@@ -117,6 +125,10 @@ const AppNavigation: React.FC = () => {
         <Stack.Screen name="GardenerSocialMap" component={GardenerSocialMapScreen} />
         <Stack.Screen name="AIMoodPlants" component={AIMoodPlantsScreen} />
         <Stack.Screen name="SeasonalAestheticSuggestions" component={SeasonalAestheticSuggestionsScreen} />
+        <Stack.Screen name="InteractiveLearningGames" component={InteractiveLearningGamesScreen} />
+        <Stack.Screen name="ARSoilExplorer" component={ARSoilExplorerScreen} />
+        <Stack.Screen name="SoilHealthTips" component={SoilHealthTipsScreen} />
+        <Stack.Screen name="SoilSuperheroStory" component={SoilSuperheroStoryScreen} />
         <Stack.Screen name="Checkout" component={Checkout} />
       </Stack.Navigator>
     </NavigationContainer>
