@@ -325,6 +325,111 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
     actionsContainer: {
       gap: spacing.sm,
     },
+    sectionContainer: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.lg,
+      padding: spacing.lg,
+      marginBottom: spacing.lg,
+      elevation: 3,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    sectionTitleContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: spacing.lg,
+    },
+    sectionIcon: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: spacing.md,
+    },
+    sectionTitleText: {
+      fontSize: fontSize.lg,
+      fontWeight: fontWeight.bold,
+      color: colors.text.primary,
+      flex: 1,
+    },
+    sectionGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+      gap: spacing.sm,
+    },
+    sectionItem: {
+      width: '48%',
+      backgroundColor: colors.background,
+      borderRadius: borderRadius.md,
+      padding: spacing.md,
+      alignItems: 'center',
+      minHeight: 100,
+      justifyContent: 'center',
+    },
+    sectionItemIcon: {
+      width: 50,
+      height: 50,
+      borderRadius: 25,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: spacing.sm,
+    },
+    sectionItemTitle: {
+      fontSize: fontSize.sm,
+      fontWeight: fontWeight.bold,
+      color: colors.text.primary,
+      textAlign: 'center',
+      marginBottom: spacing.xs,
+    },
+    sectionItemSubtitle: {
+      fontSize: fontSize.xs,
+      color: colors.text.secondary,
+      textAlign: 'center',
+      lineHeight: 16,
+    },
+    quickAccessContainer: {
+      backgroundColor: colors.primaryLight,
+      borderRadius: borderRadius.lg,
+      padding: 20,
+      marginBottom: spacing.lg,
+    },
+    quickAccessTitle: {
+      fontSize: fontSize.lg,
+      fontWeight: fontWeight.bold,
+      color: colors.surface,
+      marginBottom: spacing.md,
+      textAlign: 'center',
+    },
+    quickAccessGrid: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+    },
+    quickAccessItem: {
+      alignItems: 'center',
+      flex: 10,
+    },
+    quickAccessIcon: {
+      width: 50,
+      height: 50,
+      borderRadius: 25,
+      backgroundColor: colors.surface,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: spacing.sm,
+    },
+    quickAccessText: {
+      fontSize: fontSize.xs,
+      color: colors.surface,
+      textAlign: 'center',
+      fontWeight: fontWeight.medium,
+    },
   });
 
   const styles = getStyles();
@@ -356,24 +461,25 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
     },
   ];
 
-  const quickActions = [
+  // Organized sections for better navigation
+  const gardenPlanningTools = [
     {
       title: 'Virtual Garden Planner',
-      subtitle: 'Design your garden',
+      subtitle: 'Design your dream garden',
       icon: 'map',
       onPress: () => navigation.navigate('VirtualGardenPlanner'),
     },
     {
-      title: 'Indoor Plant Care',
-      subtitle: 'Light detection & care',
-      icon: 'bulb',
-      onPress: () => navigation.navigate('IndoorPlantCareMode'),
+      title: 'Garden Zones',
+      subtitle: 'Manage different areas',
+      icon: 'grid',
+      onPress: () => navigation.navigate('GardenZones'),
     },
     {
-      title: 'Gardener Social Map',
-      subtitle: 'Connect with gardeners',
-      icon: 'location',
-      onPress: () => navigation.navigate('GardenerSocialMap'),
+      title: 'Seasonal Suggestions',
+      subtitle: 'Season-based planting',
+      icon: 'flower',
+      onPress: () => navigation.navigate('SeasonalAestheticSuggestions'),
     },
     {
       title: 'AI Mood Plants',
@@ -381,18 +487,9 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
       icon: 'happy',
       onPress: () => navigation.navigate('AIMoodPlants'),
     },
-    {
-      title: 'Seasonal Suggestions',
-      subtitle: 'Season-based plants',
-      icon: 'flower',
-      onPress: () => navigation.navigate('SeasonalAestheticSuggestions'),
-    },
-    {
-      title: 'Garden Zones',
-      subtitle: 'Manage your zones',
-      icon: 'grid',
-      onPress: () => navigation.navigate('GardenZones'),
-    },
+  ];
+
+  const plantHealthTools = [
     {
       title: 'Plant Health Scanner',
       subtitle: 'Detect diseases & pests',
@@ -400,10 +497,64 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
       onPress: () => navigation.navigate('PlantDiseaseDetection'),
     },
     {
+      title: 'Indoor Plant Care',
+      subtitle: 'Light & care monitoring',
+      icon: 'bulb',
+      onPress: () => navigation.navigate('IndoorPlantCareMode'),
+    },
+    {
       title: 'Soil Analysis',
       subtitle: 'Check soil health',
       icon: 'analytics',
       onPress: () => navigation.navigate('SoilAnalysis'),
+    },
+    {
+      title: 'Water Schedule',
+      subtitle: 'Smart watering system',
+      icon: 'time',
+      onPress: () => navigation.navigate('WaterSchedule'),
+    },
+  ];
+
+  const kidsEducationTools = [
+    {
+      title: 'AR Soil Explorer',
+      subtitle: 'Discover soil creatures with AR',
+      icon: 'camera',
+      onPress: () => navigation.navigate('ARSoilExplorer'),
+    },
+    {
+      title: 'Learning Games',
+      subtitle: 'Interactive gardening games',
+      icon: 'game-controller',
+      onPress: () => navigation.navigate('InteractiveLearningGames'),
+    },
+    {
+      title: 'Soil Health Tips',
+      subtitle: 'Fun tips for kids & detailed guides',
+      icon: 'library',
+      onPress: () => navigation.navigate('SoilHealthTips'),
+    },
+    {
+      title: 'Superhero Stories',
+      subtitle: 'Captain Compost adventures',
+      icon: 'person',
+      onPress: () => navigation.navigate('SoilSuperheroStory'),
+    },
+  ];
+
+  const socialAndShoppingTools = [
+    {
+      title: 'Gardener Social Map',
+      subtitle: 'Connect with nearby gardeners',
+      icon: 'location',
+      onPress: () => navigation.navigate('GardenerSocialMap'),
+    },
+    {
+      title: 'Community Forum',
+      subtitle: 'Share tips & experiences',
+      icon: 'people',
+      onPress: () => navigation.navigate('Community'),
     },
     {
       title: 'Product Store',
@@ -413,22 +564,17 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
     },
     {
       title: 'Weather & Tips',
-      subtitle: 'Weather & gardening tips',
+      subtitle: 'Weather insights & tips',
       icon: 'sunny',
       onPress: () => navigation.navigate('WeatherTips'),
     },
-    {
-      title: 'Water Schedule',
-      subtitle: 'View schedule',
-      icon: 'time',
-      onPress: () => navigation.navigate('WaterSchedule'),
-    },
-    {
-      title: 'Community',
-      subtitle: 'Share & learn together',
-      icon: 'people',
-      onPress: () => navigation.navigate('Community'),
-    },
+  ];
+
+  const quickActions = [
+    ...gardenPlanningTools,
+    ...plantHealthTools,
+    ...kidsEducationTools,
+    ...socialAndShoppingTools,
   ];
 
   const plantCareReminders = [
@@ -461,6 +607,65 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
       <Text style={styles.statTitle}>{stat.title}</Text>
     </View>
   );
+
+  const renderSectionItem = (item: any, index: number) => (
+    <TouchableOpacity
+      key={index}
+      style={styles.sectionItem}
+      onPress={item.onPress}
+      activeOpacity={0.8}
+    >
+      <View style={[styles.sectionItemIcon, { backgroundColor: colors.primaryLight }]}>
+        <Ionicons name={item.icon as keyof typeof Ionicons.glyphMap} size={24} color={colors.surface} />
+      </View>
+      <Text style={styles.sectionItemTitle}>{item.title}</Text>
+      <Text style={styles.sectionItemSubtitle}>{item.subtitle}</Text>
+    </TouchableOpacity>
+  );
+
+  const renderSection = (title: string, icon: string, items: any[], iconColor: string) => (
+    <View style={styles.sectionContainer}>
+      <View style={styles.sectionTitleContainer}>
+        <View style={[styles.sectionIcon, { backgroundColor: iconColor }]}>
+          <Ionicons name={icon as keyof typeof Ionicons.glyphMap} size={24} color={colors.surface} />
+        </View>
+        <Text style={styles.sectionTitleText}>{title}</Text>
+      </View>
+      <View style={styles.sectionGrid}>
+        {items.map(renderSectionItem)}
+      </View>
+    </View>
+  );
+
+  const renderQuickAccess = () => {
+    const quickAccessItems = [
+      { title: 'Plant Scanner', icon: 'camera', onPress: () => navigation.navigate('PlantDiseaseDetection') },
+      { title: 'Water Schedule', icon: 'time', onPress: () => navigation.navigate('WaterSchedule') },
+      { title: 'Weather Tips', icon: 'sunny', onPress: () => navigation.navigate('WeatherTips') },
+      { title: 'Community', icon: 'people', onPress: () => navigation.navigate('Community') },
+    ];
+
+    return (
+      <View style={styles.quickAccessContainer}>
+        <Text style={styles.quickAccessTitle}>Quick Access</Text>
+        <View style={styles.quickAccessGrid}>
+          {quickAccessItems.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.quickAccessItem}
+              onPress={item.onPress}
+              activeOpacity={0.8}
+            >
+              <View style={styles.quickAccessIcon}>
+                <Ionicons name={item.icon as keyof typeof Ionicons.glyphMap} size={24} color={colors.primary} />
+              </View>
+              <Text style={styles.quickAccessText}>{item.title}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+    );
+  };
 
   const renderQuickAction = (action: typeof quickActions[0], index: number) => (
     <TouchableOpacity
@@ -511,8 +716,8 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
       >
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <Text style={styles.greeting}>Hello Gardener!</Text>
-            <Text style={styles.userName}>Sarah's Garden</Text>
+            <Text style={styles.greeting}>Good Morning, Gardener!</Text>
+            <Text style={styles.userName}>Sarah's Beautiful Garden</Text>
           </View>
           <TouchableOpacity 
             style={styles.profileButton}
@@ -524,6 +729,10 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
       </LinearGradient>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Quick Access Section */}
+        {renderQuickAccess()}
+
+        {/* Garden Overview Stats */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Garden Overview</Text>
           <View style={styles.statsContainer}>
@@ -531,6 +740,39 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
           </View>
         </View>
 
+        {/* Kids Education Section */}
+        {renderSection(
+          'Kids Education Hub',
+          'school',
+          kidsEducationTools,
+          colors.secondary
+        )}
+
+        {/* Garden Planning Section */}
+        {renderSection(
+          'Garden Planning & Design',
+          'leaf',
+          gardenPlanningTools,
+          colors.primary
+        )}
+
+        {/* Plant Health Section */}
+        {renderSection(
+          'Plant Health & Care',
+          'medical',
+          plantHealthTools,
+          colors.success
+        )}
+
+        {/* Social & Shopping Section */}
+        {renderSection(
+          'Community & Shopping',
+          'people',
+          socialAndShoppingTools,
+          colors.warning
+        )}
+
+        {/* Plant Care Reminders */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Plant Care Reminders</Text>
@@ -544,6 +786,7 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
           </View>
         </View>
 
+        {/* Weather Section */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Today's Weather</Text>
@@ -570,26 +813,6 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
             <Text style={styles.weatherTip}>
               Good day for outdoor gardening! Consider watering in the evening.
             </Text>
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Ionicons name="star" size={20} color={colors.warning} style={{ marginRight: spacing.sm }} />
-              <Text style={styles.sectionTitle}>New Advanced Features</Text>
-            </View>
-          </View>
-          
-          <View style={styles.actionsContainer}>
-            {quickActions.slice(0, 5).map(renderQuickAction)}
-          </View>
-        </View>
-
-        <View style={[styles.section, { paddingTop: 2, paddingHorizontal: 3, paddingBottom: 1 }]}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
-          <View style={styles.actionsContainer}>
-            {quickActions.slice(5).map(renderQuickAction)}
           </View>
         </View>
       </ScrollView>

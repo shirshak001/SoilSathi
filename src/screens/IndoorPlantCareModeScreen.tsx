@@ -138,7 +138,7 @@ const IndoorPlantCareModeScreen: React.FC<IndoorPlantCareModeScreenProps> = ({ n
     },
     {
       name: 'Peace Lily',
-      icon: '🕊️',
+      icon: 'leaf',
       lightLevel: 'low',
       minLux: 500,
       maxLux: 3000,

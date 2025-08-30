@@ -573,7 +573,7 @@ const PlantDiseaseDetection: React.FC<PlantDiseaseDetectionProps> = ({ navigatio
           {/* Tab content */}
           {activeTab === 'products' && issue.products && issue.products.length > 0 && (
             <View style={styles.tabContent}>
-              <Text style={styles.tabContentTitle}>🛒 Recommended Products</Text>
+              <Text style={styles.tabContentTitle}>Recommended Products</Text>
               {issue.products.map(product => (
                 <View key={product.id} style={styles.productCard}>
                   <View style={styles.productHeader}>
