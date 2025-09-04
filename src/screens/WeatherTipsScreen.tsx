@@ -57,7 +57,7 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({ onPress }) => {
 
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const [advice, setAdvice] = useState<string>("");
 
   // ✅ Fetch Gardener city from protected route + weather data
   const fetchWeatherData = async () => {
@@ -66,14 +66,14 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({ onPress }) => {
       // 1. Fetch logged-in user
       const res = await fetch("https://soilsathi-backend.onrender.com/api/v1/gardener/protected", {
         headers: {
-          Authorization: `Bearer ${token}`, // replace with stored token
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = await res.json();
 
       if (!data.success) throw new Error("Failed to get user");
 
-      const city = data.user.City; // ✅ Gardener's city
+      const city = data.user.City;
       console.log("🌍 City from DB:", city);
 
       // 2. Fetch weather from OpenWeather
@@ -89,7 +89,7 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({ onPress }) => {
           condition: weatherJson.list[0].weather[0].main,
           humidity: weatherJson.list[0].main.humidity,
           windSpeed: weatherJson.list[0].wind.speed,
-          uvIndex: Math.floor(Math.random() * 10), // OpenWeather free API doesn’t provide UV
+          uvIndex: Math.floor(Math.random() * 10), // placeholder
           icon: weatherJson.list[0].weather[0].main.toLowerCase(),
         },
         forecast: weatherJson.list.slice(0, 5).map((item: any, index: number) => ({
@@ -109,10 +109,42 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({ onPress }) => {
       };
 
       setWeatherData(transformed);
+
+      // ✅ After weather is fetched, ask Gemini for farming advice
+      const prompt = `You are an agriculture expert. Based on current weather: 
+      - Temperature: ${transformed.current.temperature}°C
+      - Condition: ${transformed.current.condition}
+      - Humidity: ${transformed.current.humidity}%
+      - Wind Speed: ${transformed.current.windSpeed} m/s
+      - UV Index: ${transformed.current.uvIndex}
+      Provide simple and practical farming advice in ${language === "hi" ? "Hindi" : "English"}.`;
+
+      const geminiAdvice = await getGeminiResponse(prompt);
+      setAdvice(geminiAdvice);
+
     } catch (err) {
       console.error("❌ Weather fetch error:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // ✅ Gemini API call
+  const getGeminiResponse = async (prompt: string): Promise<string> => {
+    try {
+      const response = await axios.post(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+        { contents: [{ parts: [{ text: prompt }] }] },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      return (
+        response.data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        "⚠️ Sorry, I couldn’t generate advice."
+      );
+    } catch (error: any) {
+      console.error("Gemini API error:", error.response?.data || error.message);
+      return "⚠️ Oops! Something went wrong with AI advice.";
     }
   };
 
@@ -130,35 +162,6 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({ onPress }) => {
       case 'thunderstorm': return 'thunderstorm';
       case 'snow': return 'snow';
       default: return 'partly-sunny';
-    }
-  };
-
-  const getWeatherAdvice = () => {
-    if (!weatherData) return "";
-    const temp = weatherData.current.temperature;
-    const condition = weatherData.current.condition.toLowerCase();
-    const humidity = weatherData.current.humidity;
-
-    if (language === 'hi') {
-      if (condition.includes('rain') || condition.includes('thunderstorm')) {
-        return 'बारिश के कारण आज खेत में काम न करें। फसल को ढकने का विचार करें।';
-      } else if (temp > 35) {
-        return 'आज बहुत गर्मी है। सुबह जल्दी या शाम को काम करें।';
-      } else if (humidity > 80) {
-        return 'नमी अधिक है। फंगल रोगों पर नजर रखें।';
-      } else {
-        return 'आज खेती के काम के लिए अच्छा दिन है।';
-      }
-    } else {
-      if (condition.includes('rain') || condition.includes('thunderstorm')) {
-        return 'Avoid field work today due to rain. Consider covering crops.';
-      } else if (temp > 35) {
-        return 'Very hot today. Work early morning or evening.';
-      } else if (humidity > 80) {
-        return 'High humidity. Watch for fungal diseases.';
-      } else {
-        return 'Good day for farming activities.';
-      }
     }
   };
 
@@ -234,9 +237,9 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({ onPress }) => {
         ))}
       </ScrollView>
 
-      {/* Farming Advice */}
+      {/* Farming Advice (AI-powered) */}
       <View style={styles.advice}>
-        <Text style={styles.adviceText}>{getWeatherAdvice()}</Text>
+        <Text style={styles.adviceText}>{advice}</Text>
       </View>
     </TouchableOpacity>
   );

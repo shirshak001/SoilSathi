@@ -721,7 +721,7 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
       { title: 'Water Schedule', icon: 'time', onPress: () => navigation.navigate('WaterSchedule') },
       { title: 'Weather Tips', icon: 'sunny', onPress: () => navigation.navigate('WeatherTips') },
       { title: 'Community', icon: 'people', onPress: () => navigation.navigate('Community') },
-      { title: 'Add Device', icon: 'people', onPress: () => navigation.navigate('AddDevice') },
+      { title: 'Add Device', icon: 'wifi', onPress: () => navigation.navigate('AddDevice') },
     ];
 
     return (
@@ -866,12 +866,12 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
         </View>
 
         {/* Weather Section */}
-        <View style={styles.section}>
+        {/* <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Today's Weather</Text>
-          </View>
+          </View> */}
           
-          <View style={styles.weatherCard}>
+          {/* <View style={styles.weatherCard}>
             <View style={styles.weatherMain}>
               <Ionicons name="partly-sunny" size={48} color={colors.warning} />
               <View style={styles.weatherInfo}>
@@ -892,8 +892,8 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
             <Text style={styles.weatherTip}>
               Good day for outdoor gardening! Consider watering in the evening.
             </Text>
-          </View>
-        </View>
+          </View> */}
+        {/* </View> */}
       </ScrollView>
       <FloatingPlantScanner navigation={navigation} />
       <VoiceAssistant navigation={navigation} />
