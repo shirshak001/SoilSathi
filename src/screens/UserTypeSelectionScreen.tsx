@@ -52,9 +52,9 @@ const UserTypeSelectionScreen: React.FC<UserTypeSelectionScreenProps> = ({ navig
 
   const handleContinue = () => {
     if (selectedUserType === 'farmer') {
-      navigation.navigate('FarmerDashboard');
+      navigation.navigate('LoginFarmer');
     } else if (selectedUserType === 'gardener') {
-      navigation.navigate('GardenerDashboard');
+      navigation.navigate('LoginGardener');
     }
   };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StatusBar,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,6 +17,25 @@ import { useLanguage } from '../contexts/LanguageContext';
 import FloatingPlantScanner from '../components/FloatingPlantScanner';
 import ChatBot from '../components/ChatBot';
 import VoiceAssistant from '../components/VoiceAssistant';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// const { width } = Dimensions.get('window');
+// const cardWidth = (width - spacing.lg * 3) / 2;
+
+// const getProtectedData = async () => {
+//   const token = await AsyncStorage.getItem("authToken");
+//   try {
+//     const res = await axios.get(`${process.env.API_URL}/protected`, {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     });
+//     console.log(res.data);
+//   } catch (err) {
+//     console.log("Unauthorized", err);
+//   }
+// };
 
 interface GardenerDashboardProps {
   navigation: any;
@@ -28,6 +48,64 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
   const { theme } = useTheme();
   const { colors } = theme;
   const { translations } = useLanguage();
+
+
+  const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+    useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        console.log(token);
+        if (!token) {
+          setIsLoggedIn(false);
+          setLoading(false);
+          navigation.replace("LoginGardener"); // redirect if not logged in
+          return;
+        }
+
+        // Verify token with backend
+        const res = await axios.get("https://soilsathi-backend.onrender.com/api/v1/gardener/protected", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setUser(res.data.user);
+
+        console.log(res.data);
+
+        if (res.status === 200) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+          await AsyncStorage.removeItem("token");
+          navigation.replace("LoginGardener");
+        }
+      } catch (err) {
+        console.log("Unauthorized:", err);
+        setIsLoggedIn(false);
+        await AsyncStorage.removeItem("token");
+        navigation.replace("LoginGardener");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [navigation]);
+
+    if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return null; // Already redirected to Login
+  }
 
   const getStyles = () => StyleSheet.create({
     container: {
@@ -643,6 +721,7 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
       { title: 'Water Schedule', icon: 'time', onPress: () => navigation.navigate('WaterSchedule') },
       { title: 'Weather Tips', icon: 'sunny', onPress: () => navigation.navigate('WeatherTips') },
       { title: 'Community', icon: 'people', onPress: () => navigation.navigate('Community') },
+      { title: 'Add Device', icon: 'people', onPress: () => navigation.navigate('AddDevice') },
     ];
 
     return (
@@ -717,7 +796,7 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
         <View style={styles.header}>
           <View style={styles.headerLeft}>
             <Text style={styles.greeting}>Good Morning, Gardener!</Text>
-            <Text style={styles.userName}>Sarah's Beautiful Garden</Text>
+            <Text style={styles.userName}>{user?.name}'s Beautiful Garden</Text>
           </View>
           <TouchableOpacity 
             style={styles.profileButton}

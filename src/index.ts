@@ -3,8 +3,8 @@ export { default as CustomInput } from './components/CustomInput';
 export { default as CustomButton } from './components/CustomButton';
 
 // Screens
-export { default as LoginScreen } from './screens/LoginScreen';
-export { default as SignupScreen } from './screens/SignupScreen';
+export { default as LoginScreen } from './screens/LoginScreenGardener';
+export { default as SignupScreen } from './screens/SignupScreenGardener';
 export { default as ForgotPasswordScreen } from './screens/ForgotPasswordScreen';
 export { default as UserTypeSelectionScreen } from './screens/UserTypeSelectionScreen';
 export { default as FarmerDashboard } from './screens/FarmerDashboard';

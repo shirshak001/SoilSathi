@@ -8,38 +8,36 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
+import { colors, spacing, fontSize, fontWeight } from '../constants/theme';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
+import axios from 'axios';
 
 interface SignupScreenProps {
   navigation: any;
 }
 
-const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
-  const [fullName, setFullName] = useState('');
+const SignupScreenGardener: React.FC<SignupScreenProps> = ({ navigation }) => {
+  const [username, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [city, setCity] = useState('');
+
   const [fullNameError, setFullNameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
-  const [phoneNumberError, setPhoneNumberError] = useState('');
+  const [cityError, setCityError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
-  };
-
-  const validatePhoneNumber = (phone: string) => {
-    const phoneRegex = /^[+]?[1-9]?[0-9]{7,15}$/;
-    return phoneRegex.test(phone);
   };
 
   const handleSignup = async () => {
@@ -50,14 +48,20 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
     setEmailError('');
     setPasswordError('');
     setConfirmPasswordError('');
-    setPhoneNumberError('');
+    setCityError('');
 
     // Validate full name
-    if (!fullName.trim()) {
+    if (!username.trim()) {
       setFullNameError('Full name is required');
       hasError = true;
-    } else if (fullName.trim().length < 2) {
+    } else if (username.trim().length < 2) {
       setFullNameError('Full name must be at least 2 characters');
+      hasError = true;
+    }
+
+    // Validate city
+    if (!city.trim()) {
+      setCityError('City is required');
       hasError = true;
     }
 
@@ -70,15 +74,6 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
       hasError = true;
     }
 
-    // Validate phone number
-    if (!phoneNumber) {
-      setPhoneNumberError('Phone number is required');
-      hasError = true;
-    } else if (!validatePhoneNumber(phoneNumber)) {
-      setPhoneNumberError('Please enter a valid phone number');
-      hasError = true;
-    }
-
     // Validate password
     if (!password) {
       setPasswordError('Password is required');
@@ -87,7 +82,9 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
       setPasswordError('Password must be at least 8 characters');
       hasError = true;
     } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
-      setPasswordError('Password must contain at least one uppercase letter, one lowercase letter, and one number');
+      setPasswordError(
+        'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+      );
       hasError = true;
     }
 
@@ -103,17 +100,32 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
     if (hasError) return;
 
     setLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
+
+    try {
+      const res = await axios.post("https://soilsathi-backend.onrender.com/api/v1/gardener/create", {
+        username,
+        email,
+        password,
+        city,
+      });
+
+      const data = res.data;
       setLoading(false);
-      // Navigate to user type selection screen
-      navigation.navigate('UserTypeSelection');
-    }, 2000);
+
+      if (data.success) {
+        navigation.navigate('GardenerDashboard');
+      } else {
+        Alert.alert('Signup Failed', data.message || 'An error occurred during signup.');
+      }
+    } catch (error: any) {
+      setLoading(false);
+      console.log(error);
+      Alert.alert('Error', error?.response?.data?.message || 'Something went wrong');
+    }
   };
 
   const navigateToLogin = () => {
-    navigation.navigate('Login');
+    navigation.navigate('LoginGardener');
   };
 
   return (
@@ -143,16 +155,28 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.formContainer}>
           <Text style={styles.title}>Create Account</Text>
-          <Text style={styles.subtitle}>Join SoilSathi to start smart irrigation</Text>
+          <Text style={styles.subtitle}>
+            Join SoilSathi to start smart irrigation
+          </Text>
 
           <CustomInput
             label="Full Name"
-            value={fullName}
-            onChangeText={setFullName}
+            value={username}
+            onChangeText={setUserName}
             placeholder="Enter your full name"
             autoCapitalize="words"
             leftIcon="person-outline"
             error={fullNameError}
+          />
+
+          <CustomInput
+            label="City"
+            value={city}
+            onChangeText={setCity}
+            placeholder="Enter your city"
+            autoCapitalize="words"
+            leftIcon="location-outline"
+            error={cityError}
           />
 
           <CustomInput
@@ -164,16 +188,6 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
             autoCapitalize="none"
             leftIcon="mail-outline"
             error={emailError}
-          />
-
-          <CustomInput
-            label="Phone Number"
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-            placeholder="Enter your phone number"
-            keyboardType="phone-pad"
-            leftIcon="call-outline"
-            error={phoneNumberError}
           />
 
           <CustomInput
@@ -247,7 +261,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    marginRight: spacing.xl + spacing.md, // Compensate for back button space
+    marginRight: spacing.xl + spacing.md,
   },
   appName: {
     fontSize: fontSize.xl,
@@ -308,4 +322,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignupScreen;
+export default SignupScreenGardener;

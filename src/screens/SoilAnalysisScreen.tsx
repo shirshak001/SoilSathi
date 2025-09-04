@@ -9,10 +9,12 @@ import {
   Dimensions,
   Modal,
 } from 'react-native';
+import axios from 'axios';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
 import CustomButton from '../components/CustomButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface SoilAnalysisScreenProps {
   navigation: any;
@@ -55,22 +57,34 @@ const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) =
 
   // Simulated soil sensor data
   useEffect(() => {
-    const fetchSoilData = () => {
-      setTimeout(() => {
-        setSoilData({
-          nitrogen: 65,
-          phosphorus: 45,
-          potassium: 55,
-          moisture: 32,
-          ph: 6.8,
-          temperature: 24,
-          lastUpdated: new Date().toLocaleString(),
+    const fetchSoilData = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        const res = await axios.get("https://soilsathi-backend.onrender.com/api/v1/gardener/protected", {
+          headers: { Authorization: `Bearer ${token}` },
         });
+        const deviceId = await res.data.user.deviceId;
+        setIsLoading(true);
+        console.log(deviceId);
+        const response = await axios.get(`https://soilsathi-backend.onrender.com/api/v1/sensor/getData/${deviceId}`, {
+          withCredentials: true, // if you're using cookies for auth
+        });
+        console.log(response.data.data);
+        // assuming your backend returns something like:
+        // { nitrogen, phosphorus, potassium, moisture, ph, temperature, lastUpdated }
+        setSoilData(response.data.data);
+      } catch (error) {
+        console.error("Error fetching soil data:", error);
+      } finally {
         setIsLoading(false);
-      }, 2000);
+      }
     };
 
     fetchSoilData();
+
+    // optional: refresh every 60s
+    const interval = setInterval(fetchSoilData, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const recommendations: Recommendation[] = [
@@ -142,31 +156,31 @@ const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) =
   };
 
   const renderRecommendation = (rec: Recommendation) => {
-    const urgencyColor = rec.urgency === 'high' ? colors.error : 
-                        rec.urgency === 'medium' ? colors.warning : colors.success;
-    
+    const urgencyColor = rec.urgency === 'high' ? colors.error :
+      rec.urgency === 'medium' ? colors.warning : colors.success;
+
     return (
       <View key={rec.id} style={styles.recommendationCard}>
         <View style={styles.recommendationHeader}>
           <View style={[styles.urgencyBadge, { backgroundColor: urgencyColor }]}>
             <Text style={styles.urgencyText}>{rec.urgency.toUpperCase()}</Text>
           </View>
-          <Ionicons 
-            name={rec.type === 'water' ? 'water' : rec.type === 'fertilizer' ? 'leaf' : 'information-circle'} 
-            size={20} 
-            color={colors.primary} 
+          <Ionicons
+            name={rec.type === 'water' ? 'water' : rec.type === 'fertilizer' ? 'leaf' : 'information-circle'}
+            size={20}
+            color={colors.primary}
           />
         </View>
-        
+
         <Text style={styles.recommendationTitle}>{rec.title}</Text>
         <Text style={styles.recommendationDescription}>{rec.description}</Text>
-        
+
         {rec.products && rec.products.length > 0 && (
           <View style={styles.productSection}>
             <Text style={styles.productSectionTitle}>Recommended Products:</Text>
             {rec.products.map(product => (
-              <TouchableOpacity 
-                key={product.id} 
+              <TouchableOpacity
+                key={product.id}
                 style={styles.productCard}
                 onPress={() => navigation.navigate('ProductStore', { productId: product.id })}
               >
@@ -255,12 +269,14 @@ const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) =
         </View>
 
         <View style={styles.parametersGrid}>
-          {renderSoilParameter('Nitrogen (N)', soilData?.nitrogen || 0, '%', 'leaf', [60, 80])}
-          {renderSoilParameter('Phosphorus (P)', soilData?.phosphorus || 0, '%', 'flower', [50, 70])}
-          {renderSoilParameter('Potassium (K)', soilData?.potassium || 0, '%', 'nutrition', [50, 70])}
-          {renderSoilParameter('Moisture', soilData?.moisture || 0, '%', 'water', [40, 60])}
-          {renderSoilParameter('pH Level', soilData?.ph || 0, '', 'flask', [6.0, 7.5])}
+          {renderSoilParameter('Nitrogen (N)', soilData?.Nitrogen || 0, '%', 'leaf', [60, 80])}
+          {renderSoilParameter('Phosphorus (P)', soilData?.Phosphorus || 0, '%', 'flower', [50, 70])}
+          {renderSoilParameter('Potassium (K)', soilData?.Potassium || 0, '%', 'nutrition', [50, 70])}
+          {renderSoilParameter('Soil Moisture', soilData?.soilMoisture || 0, '%', 'water', [40, 60])}
+          {renderSoilParameter('pH Level', soilData?.pH || 0, '', 'flask', [6.0, 7.5])}
           {renderSoilParameter('Temperature', soilData?.temperature || 0, '°C', 'thermometer', [20, 30])}
+          {renderSoilParameter('Humidity', soilData?.humidity || 0, '%', 'water', [40, 60])}
+          {renderSoilParameter('Barometric Pressure', soilData?.pressure || 0, 'hPa', 'water', [40, 60])}
         </View>
 
         <View style={styles.section}>
@@ -281,7 +297,7 @@ const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) =
             onPress={() => navigation.navigate('ProductStore')}
             style={styles.actionButton}
           />
-          
+
           <CustomButton
             title="Set Reminders"
             variant="outline"

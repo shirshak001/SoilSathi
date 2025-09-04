@@ -48,73 +48,21 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ navigation }) => {
   const listeningAnimation = useRef(new Animated.Value(0)).current;
   const modalAnimation = useRef(new Animated.Value(0)).current;
 
-  // Voice commands mapping with keywords
+  // Voice commands mapping
   const voiceCommands: VoiceCommand[] = [
-    {
-      command: 'weather',
-      action: () => navigation.navigate('WeatherTips'),
-      description: 'Check weather tips'
-    },
-    {
-      command: 'soil analysis',
-      action: () => navigation.navigate('SoilAnalysis'),
-      description: 'Go to soil analysis'
-    },
-    {
-      command: 'plant disease',
-      action: () => navigation.navigate('PlantDiseaseDetection'),
-      description: 'Detect plant diseases'
-    },
-    {
-      command: 'water schedule',
-      action: () => navigation.navigate('WaterSchedule'),
-      description: 'Check watering schedule'
-    },
-    {
-      command: 'drone service',
-      action: () => navigation.navigate('DroneService'),
-      description: 'Book drone services'
-    },
-    {
-      command: 'community',
-      action: () => navigation.navigate('Community'),
-      description: 'Visit community'
-    },
-    {
-      command: 'profile',
-      action: () => navigation.navigate('Profile'),
-      description: 'Go to profile'
-    },
-    {
-      command: 'settings',
-      action: () => navigation.navigate('Settings'),
-      description: 'Open settings'
-    },
-    {
-      command: 'plant store',
-      action: () => navigation.navigate('ProductStore'),
-      description: 'Visit plant store'
-    },
-    {
-      command: 'field management',
-      action: () => navigation.navigate('FieldManagement'),
-      description: 'Manage your fields'
-    },
-    {
-      command: 'garden zones',
-      action: () => navigation.navigate('GardenZones'),
-      description: 'Check garden zones'
-    },
-    {
-      command: 'farming tip',
-      action: () => provideFarmingTip(),
-      description: 'Get farming tip'
-    },
-    {
-      command: 'help',
-      action: () => showHelp(),
-      description: 'Show help'
-    },
+    { command: 'weather', action: () => navigation.navigate('WeatherTips'), description: 'Check weather tips' },
+    { command: 'soil analysis', action: () => navigation.navigate('SoilAnalysis'), description: 'Go to soil analysis' },
+    { command: 'plant disease', action: () => navigation.navigate('PlantDiseaseDetection'), description: 'Detect plant diseases' },
+    { command: 'water schedule', action: () => navigation.navigate('WaterSchedule'), description: 'Check watering schedule' },
+    { command: 'drone service', action: () => navigation.navigate('DroneService'), description: 'Book drone services' },
+    { command: 'community', action: () => navigation.navigate('Community'), description: 'Visit community' },
+    { command: 'profile', action: () => navigation.navigate('Profile'), description: 'Go to profile' },
+    { command: 'settings', action: () => navigation.navigate('Settings'), description: 'Open settings' },
+    { command: 'plant store', action: () => navigation.navigate('ProductStore'), description: 'Visit plant store' },
+    { command: 'field management', action: () => navigation.navigate('FieldManagement'), description: 'Manage your fields' },
+    { command: 'garden zones', action: () => navigation.navigate('GardenZones'), description: 'Check garden zones' },
+    { command: 'farming tip', action: () => provideFarmingTip(), description: 'Get farming tip' },
+    { command: 'help', action: () => showHelp(), description: 'Show help' },
   ];
 
   // Pan responder for dragging
@@ -126,45 +74,27 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ navigation }) => {
       setPosition({ x: newX, y: newY });
     },
     onPanResponderRelease: () => {
-      // Snap to edges for better UX
       const snapToEdge = position.x > width / 2;
-      setPosition(prev => ({
-        ...prev,
-        x: snapToEdge ? width - 70 : 10,
-      }));
+      setPosition(prev => ({ ...prev, x: snapToEdge ? width - 70 : 10 }));
     },
   });
 
   useEffect(() => {
-    // Pulse animation
     const pulse = Animated.loop(
       Animated.sequence([
-        Animated.timing(pulseAnimation, {
-          toValue: 1.1,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnimation, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
+        Animated.timing(pulseAnimation, { toValue: 1.1, duration: 1000, useNativeDriver: true }),
+        Animated.timing(pulseAnimation, { toValue: 1, duration: 1000, useNativeDriver: true }),
       ])
     );
     pulse.start();
-
-    // Check if tutorial should be shown
     checkTutorialStatus();
-
     return () => pulse.stop();
   }, []);
 
   const checkTutorialStatus = async () => {
     try {
       const tutorialCompleted = await AsyncStorage.getItem('voiceAssistantTutorialCompleted');
-      if (!tutorialCompleted) {
-        setTimeout(() => setShowTutorial(true), 2000); // Show after 2 seconds
-      }
+      if (!tutorialCompleted) setTimeout(() => setShowTutorial(true), 2000);
     } catch (error) {
       console.error('Error checking tutorial status:', error);
     }
@@ -173,39 +103,22 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ navigation }) => {
   const provideFarmingTip = () => {
     const hour = new Date().getHours();
     let tip = '';
-    
+
     if (language === 'hi') {
-      if (hour >= 6 && hour < 10) {
-        tip = 'सुबह का समय पौधों को पानी देने के लिए सबसे अच्छा है।';
-      } else if (hour >= 10 && hour < 16) {
-        tip = 'दिन के समय छाया में काम करें और पौधों की जाँच करें।';
-      } else if (hour >= 16 && hour < 19) {
-        tip = 'शाम का समय उर्वरक डालने के लिए उपयुक्त है।';
-      } else {
-        tip = 'रात के समय कल के काम की योजना बनाएं।';
-      }
+      if (hour >= 6 && hour < 10) tip = 'सुबह का समय पौधों को पानी देने के लिए सबसे अच्छा है।';
+      else if (hour >= 10 && hour < 16) tip = 'दिन के समय छाया में काम करें और पौधों की जाँच करें।';
+      else if (hour >= 16 && hour < 19) tip = 'शाम का समय उर्वरक डालने के लिए उपयुक्त है।';
+      else tip = 'रात के समय कल के काम की योजना बनाएं।';
     } else {
-      if (hour >= 6 && hour < 10) {
-        tip = 'Morning is the best time to water your plants.';
-      } else if (hour >= 10 && hour < 16) {
-        tip = 'Work in shade during daytime and check your plants.';
-      } else if (hour >= 16 && hour < 19) {
-        tip = 'Evening is suitable for applying fertilizers.';
-      } else {
-        tip = 'Night time is perfect for planning tomorrow\'s farming tasks.';
-      }
+      if (hour >= 6 && hour < 10) tip = 'Morning is the best time to water your plants.';
+      else if (hour >= 10 && hour < 16) tip = 'Work in shade during daytime and check your plants.';
+      else if (hour >= 16 && hour < 19) tip = 'Evening is suitable for applying fertilizers.';
+      else tip = 'Night time is perfect for planning tomorrow\'s farming tasks.';
     }
-    
+
     setIsModalVisible(true);
     setCurrentResponse(tip);
-    
-    Animated.spring(modalAnimation, {
-      toValue: 1,
-      useNativeDriver: true,
-      tension: 100,
-      friction: 8,
-    }).start();
-
+    Animated.spring(modalAnimation, { toValue: 1, useNativeDriver: true, tension: 100, friction: 8 }).start();
     speak(tip);
   };
 
@@ -213,16 +126,8 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ navigation }) => {
     if (isListening) {
       const listening = Animated.loop(
         Animated.sequence([
-          Animated.timing(listeningAnimation, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: true,
-          }),
-          Animated.timing(listeningAnimation, {
-            toValue: 0,
-            duration: 500,
-            useNativeDriver: true,
-          }),
+          Animated.timing(listeningAnimation, { toValue: 1, duration: 500, useNativeDriver: true }),
+          Animated.timing(listeningAnimation, { toValue: 0, duration: 500, useNativeDriver: true }),
         ])
       );
       listening.start();
@@ -235,10 +140,7 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ navigation }) => {
     try {
       const { status } = await Audio.requestPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert(
-          'Permission Required',
-          'Microphone permission is required for voice assistant to work.'
-        );
+        Alert.alert('Permission Required', 'Microphone permission is required for voice assistant to work.');
         return false;
       }
       return true;
@@ -253,58 +155,28 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ navigation }) => {
     if (!hasPermission) return;
 
     try {
+      // stop existing recording safely
+      if (recording) {
+        try {
+          await recording.stopAndUnloadAsync();
+        } catch {}
+        setRecording(null);
+      }
+
       setIsRecording(true);
       setIsListening(true);
       setIsModalVisible(true);
-      
-      const listeningText = language === 'hi' ? 'सुन रहा हूँ...' : 'Listening...';
-      setCurrentResponse(listeningText);
+      setCurrentResponse(language === 'hi' ? 'सुन रहा हूँ...' : 'Listening...');
 
-      // Animate modal
-      Animated.spring(modalAnimation, {
-        toValue: 1,
-        useNativeDriver: true,
-        tension: 100,
-        friction: 8,
-      }).start();
+      Animated.spring(modalAnimation, { toValue: 1, useNativeDriver: true, tension: 100, friction: 8 }).start();
 
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
+      await Audio.setAudioModeAsync({ allowsRecordingIOS: true, playsInSilentModeIOS: true });
 
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY
-      );
-      setRecording(recording);
+      const { recording: newRecording } = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
+      setRecording(newRecording);
 
-      // Simulate listening timeout (5 seconds)
-      setTimeout(() => {
-        stopListening();
-      }, 5000);
-
-      // Welcome message on first activation
-      if (!currentResponse) {
-        const hour = new Date().getHours();
-        let greeting = '';
-        
-        if (language === 'hi') {
-          if (hour < 12) greeting = 'सुप्रभात! मैं आपका खेती सहायक हूँ।';
-          else if (hour < 17) greeting = 'नमस्ते! मैं आपका खेती सहायक हूँ।';
-          else greeting = 'शुभ संध्या! मैं आपका खेती सहायक हूँ।';
-        } else {
-          if (hour < 12) greeting = 'Good morning! I am your farming assistant.';
-          else if (hour < 17) greeting = 'Good afternoon! I am your farming assistant.';
-          else greeting = 'Good evening! I am your farming assistant.';
-        }
-        
-        const fullMessage = greeting + (language === 'hi' ? ' आप क्या जानना चाहते हैं?' : ' What would you like to know?');
-        
-        setTimeout(() => {
-          speak(fullMessage);
-        }, 500);
-      }
-
+      // Auto-stop after 5s
+      setTimeout(() => stopListening(), 5000);
     } catch (error) {
       console.error('Failed to start recording:', error);
       setIsListening(false);
@@ -317,20 +189,16 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ navigation }) => {
     try {
       setIsListening(false);
       setIsRecording(false);
-      
-      const processingText = language === 'hi' ? 'प्रोसेसिंग...' : 'Processing...';
-      setCurrentResponse(processingText);
+      setCurrentResponse(language === 'hi' ? 'प्रोसेसिंग...' : 'Processing...');
 
       if (recording) {
-        await recording.stopAndUnloadAsync();
+        try {
+          await recording.stopAndUnloadAsync();
+        } catch {}
         setRecording(null);
       }
 
-      // Simulate processing and response
-      setTimeout(() => {
-        processVoiceCommand();
-      }, 1000);
-
+      setTimeout(() => processVoiceCommand(), 1000);
     } catch (error) {
       console.error('Failed to stop recording:', error);
       closeModal();
@@ -338,72 +206,32 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ navigation }) => {
   };
 
   const processVoiceCommand = () => {
-    // Simulate voice command processing
-    // In a real app, you would use a speech-to-text service here
-    const simulatedCommands = [
-      'weather',
-      'soil analysis',
-      'plant disease',
-      'water schedule',
-      'drone service',
-      'community',
-      'profile',
-      'settings'
-    ];
-    
+    const simulatedCommands = ['weather', 'soil analysis', 'plant disease', 'water schedule', 'drone service', 'community', 'profile', 'settings'];
     const randomCommand = simulatedCommands[Math.floor(Math.random() * simulatedCommands.length)];
     const command = voiceCommands.find(cmd => cmd.command === randomCommand);
-    
+
     if (command) {
-      const responseText = language === 'hi' 
-        ? `${command.description} खोला जा रहा है...`
-        : `Opening ${command.description}...`;
-      
+      const responseText = language === 'hi' ? `${command.description} खोला जा रहा है...` : `Opening ${command.description}...`;
       setCurrentResponse(responseText);
       speak(responseText);
-      
-      setTimeout(() => {
-        command.action();
-        closeModal();
-      }, 1500);
+      setTimeout(() => { command.action(); closeModal(); }, 1500);
     } else {
-      const errorText = language === 'hi'
-        ? "माफ़ करें, मैं समझ नहीं पाया। कृपया फिर से कोशिश करें।"
-        : "Sorry, I didn't understand that. Please try again.";
-      
+      const errorText = language === 'hi' ? "माफ़ करें, मैं समझ नहीं पाया। कृपया फिर से कोशिश करें।" : "Sorry, I didn't understand that. Please try again.";
       setCurrentResponse(errorText);
       speak(errorText);
-      
-      setTimeout(() => {
-        closeModal();
-      }, 2000);
+      setTimeout(() => closeModal(), 2000);
     }
   };
 
   const speak = (text: string) => {
     const languageMap: { [key: string]: string } = {
-      'en': 'en-US',
-      'hi': 'hi-IN',
-      'ta': 'ta-IN',
-      'bn': 'bn-IN',
-      'te': 'te-IN',
-      'pa': 'pa-IN',
-      'kn': 'kn-IN',
+      'en': 'en-US', 'hi': 'hi-IN', 'ta': 'ta-IN', 'bn': 'bn-IN', 'te': 'te-IN', 'pa': 'pa-IN', 'kn': 'kn-IN',
     };
-    
-    Speech.speak(text, {
-      language: languageMap[language] || 'en-US',
-      pitch: 1.0,
-      rate: 0.9,
-    });
+    Speech.speak(text, { language: languageMap[language] || 'en-US', pitch: 1.0, rate: 0.9 });
   };
 
   const closeModal = () => {
-    Animated.timing(modalAnimation, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => {
+    Animated.timing(modalAnimation, { toValue: 0, duration: 300, useNativeDriver: true }).start(() => {
       setIsModalVisible(false);
       setCurrentResponse('');
     });
@@ -411,194 +239,70 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ navigation }) => {
 
   const showHelp = () => {
     setIsModalVisible(true);
-    
     const helpText = language === 'hi'
       ? 'उपलब्ध वॉयस कमांड: ' + voiceCommands.map(cmd => cmd.command).join(', ')
       : 'Voice commands available: ' + voiceCommands.map(cmd => cmd.command).join(', ');
-    
-    const speechText = language === 'hi'
-      ? 'यहाँ उपलब्ध वॉयस कमांड हैं: ' + voiceCommands.map(cmd => cmd.command).join(', ')
-      : 'Here are the available voice commands: ' + voiceCommands.map(cmd => cmd.command).join(', ');
-    
     setCurrentResponse(helpText);
-    
-    Animated.spring(modalAnimation, {
-      toValue: 1,
-      useNativeDriver: true,
-      tension: 100,
-      friction: 8,
-    }).start();
-
-    speak(speechText);
+    Animated.spring(modalAnimation, { toValue: 1, useNativeDriver: true, tension: 100, friction: 8 }).start();
+    speak(helpText);
   };
 
-  const listeningScale = listeningAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 1.3],
-  });
-
-  const listeningOpacity = listeningAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.7, 1],
-  });
-
-  const modalScale = modalAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.3, 1],
-  });
-
-  const modalOpacity = modalAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 1],
-  });
+  const listeningScale = listeningAnimation.interpolate({ inputRange: [0, 1], outputRange: [1, 1.3] });
+  const listeningOpacity = listeningAnimation.interpolate({ inputRange: [0, 1], outputRange: [0.7, 1] });
+  const modalScale = modalAnimation.interpolate({ inputRange: [0, 1], outputRange: [0.3, 1] });
+  const modalOpacity = modalAnimation.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
 
   return (
     <>
-      {/* Voice Assistant Tutorial */}
-      <VoiceAssistantTutorial
-        visible={showTutorial}
-        onClose={() => setShowTutorial(false)}
-      />
+      <VoiceAssistantTutorial visible={showTutorial} onClose={() => setShowTutorial(false)} />
 
-      {/* Floating Voice Assistant Button */}
+      {/* Floating Button */}
       <Animated.View
-        style={[
-          styles.floatingButton,
-          {
-            left: position.x,
-            top: position.y,
-            transform: [{ scale: pulseAnimation }],
-          },
-        ]}
+        style={[styles.floatingButton, { left: position.x, top: position.y, transform: [{ scale: pulseAnimation }] }]}
         {...panResponder.panHandlers}
       >
-        <TouchableOpacity
-          onPress={startListening}
-          onLongPress={showHelp}
-          activeOpacity={0.8}
-          style={styles.buttonContainer}
-        >
-          <LinearGradient
-            colors={[theme.colors.primary, theme.colors.primaryLight]}
-            style={styles.gradient}
-          >
-            <Animated.View
-              style={[
-                styles.iconContainer,
-                isListening && {
-                  transform: [{ scale: listeningScale }],
-                  opacity: listeningOpacity,
-                },
-              ]}
-            >
-              <Ionicons
-                name={isListening ? "mic" : "mic-outline"}
-                size={24}
-                color={theme.colors.surface}
-              />
+        <TouchableOpacity onPress={startListening} onLongPress={showHelp} activeOpacity={0.8} style={styles.buttonContainer}>
+          <LinearGradient colors={[theme.colors.primary, theme.colors.primaryLight]} style={styles.gradient}>
+            <Animated.View style={[styles.iconContainer, isListening && { transform: [{ scale: listeningScale }], opacity: listeningOpacity }]}>
+              <Ionicons name={isListening ? "mic" : "mic-outline"} size={24} color={theme.colors.surface} />
             </Animated.View>
           </LinearGradient>
         </TouchableOpacity>
       </Animated.View>
 
-      {/* Voice Assistant Modal */}
-      <Modal
-        visible={isModalVisible}
-        transparent
-        animationType="none"
-        onRequestClose={closeModal}
-      >
+      {/* Modal */}
+      <Modal visible={isModalVisible} transparent animationType="none" onRequestClose={closeModal}>
         <View style={styles.modalOverlay}>
-          <Animated.View
-            style={[
-              styles.modalContainer,
-              {
-                transform: [{ scale: modalScale }],
-                opacity: modalOpacity,
-              },
-            ]}
-          >
-            <LinearGradient
-              colors={[theme.colors.surface, theme.colors.background]}
-              style={styles.modalGradient}
-            >
-              {/* Header */}
+          <Animated.View style={[styles.modalContainer, { transform: [{ scale: modalScale }], opacity: modalOpacity }]}>
+            <LinearGradient colors={[theme.colors.surface, theme.colors.background]} style={styles.modalGradient}>
               <View style={styles.modalHeader}>
-                <Ionicons
-                  name="mic"
-                  size={32}
-                  color={theme.colors.primary}
-                />
-                <Text style={[styles.modalTitle, { color: theme.colors.text.primary }]}>
-                  {language === 'hi' ? 'वॉयस असिस्टेंट' : 'Voice Assistant'}
-                </Text>
+                <Ionicons name="mic" size={32} color={theme.colors.primary} />
+                <Text style={[styles.modalTitle, { color: theme.colors.text.primary }]}>{language === 'hi' ? 'वॉयस असिस्टेंट' : 'Voice Assistant'}</Text>
                 <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-                  <Ionicons
-                    name="close"
-                    size={24}
-                    color={theme.colors.text.secondary}
-                  />
+                  <Ionicons name="close" size={24} color={theme.colors.text.secondary} />
                 </TouchableOpacity>
               </View>
 
-              {/* Listening Animation */}
               {isListening && (
                 <View style={styles.listeningContainer}>
-                  <Animated.View
-                    style={[
-                      styles.listeningWave,
-                      {
-                        transform: [{ scale: listeningScale }],
-                        backgroundColor: theme.colors.primary,
-                      },
-                    ]}
-                  />
-                  <Animated.View
-                    style={[
-                      styles.listeningWave,
-                      styles.listeningWaveDelay,
-                      {
-                        transform: [{ scale: listeningScale }],
-                        backgroundColor: theme.colors.primaryLight,
-                      },
-                    ]}
-                  />
+                  <Animated.View style={[styles.listeningWave, { transform: [{ scale: listeningScale }], backgroundColor: theme.colors.primary }]} />
+                  <Animated.View style={[styles.listeningWave, styles.listeningWaveDelay, { transform: [{ scale: listeningScale }], backgroundColor: theme.colors.primaryLight }]} />
                 </View>
               )}
 
-              {/* Response Text */}
               <View style={styles.responseContainer}>
-                <Text style={[styles.responseText, { color: theme.colors.text.primary }]}>
-                  {currentResponse}
-                </Text>
+                <Text style={[styles.responseText, { color: theme.colors.text.primary }]}>{currentResponse}</Text>
               </View>
 
-              {/* Quick Actions */}
               {!isListening && !currentResponse.includes(language === 'hi' ? 'प्रोसेसिंग' : 'Processing') && (
                 <View style={styles.quickActions}>
-                  <TouchableOpacity
-                    style={[styles.quickActionButton, { borderColor: theme.colors.primary }]}
-                    onPress={() => {
-                      const exampleText = language === 'hi'
-                        ? 'कोशिश करें: मौसम देखें, या मिट्टी विश्लेषण, या पौधे की बीमारी पहचान'
-                        : 'Try saying: Check weather, or Soil analysis, or Plant disease detection';
-                      speak(exampleText);
-                    }}
-                  >
+                  <TouchableOpacity style={[styles.quickActionButton, { borderColor: theme.colors.primary }]} onPress={() => speak(language === 'hi' ? 'कोशिश करें: मौसम देखें, मिट्टी विश्लेषण, पौधे की बीमारी' : 'Try saying: Check weather, Soil analysis, Plant disease detection')}>
                     <Ionicons name="help-circle-outline" size={20} color={theme.colors.primary} />
-                    <Text style={[styles.quickActionText, { color: theme.colors.primary }]}>
-                      {language === 'hi' ? 'उदाहरण' : 'Examples'}
-                    </Text>
+                    <Text style={[styles.quickActionText, { color: theme.colors.primary }]}>{language === 'hi' ? 'उदाहरण' : 'Examples'}</Text>
                   </TouchableOpacity>
-                  
-                  <TouchableOpacity
-                    style={[styles.quickActionButton, { borderColor: theme.colors.primary }]}
-                    onPress={startListening}
-                  >
+                  <TouchableOpacity style={[styles.quickActionButton, { borderColor: theme.colors.primary }]} onPress={startListening}>
                     <Ionicons name="mic-outline" size={20} color={theme.colors.primary} />
-                    <Text style={[styles.quickActionText, { color: theme.colors.primary }]}>
-                      {language === 'hi' ? 'फिर कोशिश' : 'Try Again'}
-                    </Text>
+                    <Text style={[styles.quickActionText, { color: theme.colors.primary }]}>{language === 'hi' ? 'फिर कोशिश' : 'Try Again'}</Text>
                   </TouchableOpacity>
                 </View>
               )}
@@ -611,112 +315,24 @@ const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  floatingButton: {
-    position: 'absolute',
-    width: 60,
-    height: 60,
-    zIndex: 1000,
-    elevation: 8,
-    shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-  },
-  buttonContainer: {
-    width: '100%',
-    height: '100%',
-    borderRadius: borderRadius.full,
-    overflow: 'hidden',
-  },
-  gradient: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContainer: {
-    width: width * 0.9,
-    maxWidth: 400,
-    borderRadius: borderRadius.lg,
-    overflow: 'hidden',
-    elevation: 10,
-    shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
-  },
-  modalGradient: {
-    padding: spacing.lg,
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: spacing.lg,
-  },
-  modalTitle: {
-    flex: 1,
-    fontSize: fontSize.lg,
-    fontWeight: fontWeight.semibold,
-    marginLeft: spacing.sm,
-  },
-  closeButton: {
-    padding: spacing.xs,
-  },
-  listeningContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 80,
-    marginVertical: spacing.md,
-  },
-  listeningWave: {
-    position: 'absolute',
-    width: 60,
-    height: 60,
-    borderRadius: borderRadius.full,
-    opacity: 0.3,
-  },
-  listeningWaveDelay: {
-    width: 80,
-    height: 80,
-    opacity: 0.2,
-  },
-  responseContainer: {
-    minHeight: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-  },
-  responseText: {
-    fontSize: fontSize.md,
-    textAlign: 'center',
-    lineHeight: 24,
-  },
-  quickActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: spacing.lg,
-  },
-  quickActionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderWidth: 1,
-    borderRadius: borderRadius.md,
-  },
-  quickActionText: {
-    fontSize: fontSize.sm,
-    marginLeft: spacing.xs,
-  },
+  floatingButton: { position: 'absolute', width: 60, height: 60, zIndex: 1000, elevation: 8, shadowColor: colors.shadow, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8 },
+  buttonContainer: { width: '100%', height: '100%', borderRadius: borderRadius.full, overflow: 'hidden' },
+  gradient: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  iconContainer: { justifyContent: 'center', alignItems: 'center' },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', alignItems: 'center' },
+  modalContainer: { width: width * 0.9, maxWidth: 400, borderRadius: borderRadius.lg, overflow: 'hidden', elevation: 10, shadowColor: colors.shadow, shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 16 },
+  modalGradient: { padding: spacing.lg },
+  modalHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: spacing.lg },
+  modalTitle: { flex: 1, fontSize: fontSize.lg, fontWeight: fontWeight.semibold, marginLeft: spacing.sm },
+  closeButton: { padding: spacing.xs },
+  listeningContainer: { alignItems: 'center', justifyContent: 'center', height: 80, marginVertical: spacing.md },
+  listeningWave: { position: 'absolute', width: 60, height: 60, borderRadius: borderRadius.full, opacity: 0.3 },
+  listeningWaveDelay: { width: 80, height: 80, opacity: 0.2 },
+  responseContainer: { minHeight: 60, justifyContent: 'center', alignItems: 'center', paddingHorizontal: spacing.md },
+  responseText: { fontSize: fontSize.md, textAlign: 'center', lineHeight: 24 },
+  quickActions: { flexDirection: 'row', justifyContent: 'space-around', marginTop: spacing.lg },
+  quickActionButton: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderWidth: 1, borderRadius: borderRadius.md },
+  quickActionText: { fontSize: fontSize.sm, marginLeft: spacing.xs },
 });
 
 export default VoiceAssistant;

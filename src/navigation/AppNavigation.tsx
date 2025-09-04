@@ -1,8 +1,10 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import LoginScreen from '../screens/LoginScreen';
-import SignupScreen from '../screens/SignupScreen';
+import LoginScreenFarmer from '../screens/LoginScreenFarmer';
+import LoginScreenGardener from '../screens/LoginScreenGardener';
+import SignupScreenGardener from '../screens/SignupScreenGardener';
+import SignupScreenFarmer from '../screens/SignupScreenGardener';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import UserTypeSelectionScreen from '../screens/UserTypeSelectionScreen';
 import FarmerDashboard from '../screens/FarmerDashboard';
@@ -34,10 +36,13 @@ import InteractiveLearningGamesScreen from '../screens/InteractiveLearningGamesS
 import ARSoilExplorerScreen from '../screens/ARSoilExplorerScreen';
 import SoilHealthTipsScreen from '../screens/SoilHealthTipsScreen';
 import SoilSuperheroStoryScreen from '../screens/SoilSuperheroStoryScreen';
+import AddDeviceScreen from '../screens/AddDeviceScreen';
 
 export type RootStackParamList = {
-  Login: undefined;
-  Signup: undefined;
+  LoginFarmer: undefined;
+  LoginGardener: undefined;
+  SignupFarmer: undefined;
+  SignupGardener: undefined;
   ForgotPassword: undefined;
   UserTypeSelection: undefined;
   FarmerDashboard: undefined;
@@ -70,6 +75,7 @@ export type RootStackParamList = {
   ARSoilExplorer: undefined;
   SoilHealthTips: undefined;
   SoilSuperheroStory: undefined;
+  AddDevice: undefined;
   Checkout: {
     items: Array<{
       product: {
@@ -90,17 +96,19 @@ const AppNavigation: React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="GardenerDashboard"
         screenOptions={{
           headerShown: false,
           gestureEnabled: true,
           gestureDirection: 'horizontal',
         }}
       >
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Signup" component={SignupScreen} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         <Stack.Screen name="UserTypeSelection" component={UserTypeSelectionScreen} />
+        <Stack.Screen name="SignupGardener" component={SignupScreenGardener} />
+        <Stack.Screen name="SignupFarmer" component={SignupScreenFarmer} />
+        <Stack.Screen name="LoginFarmer" component={LoginScreenFarmer} />
+        <Stack.Screen name="LoginGardener" component={LoginScreenGardener} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         <Stack.Screen name="FarmerDashboard" component={FarmerDashboard} />
         <Stack.Screen name="GardenerDashboard" component={GardenerDashboard} />
         <Stack.Screen name="DroneService" component={DroneServiceScreen} />
@@ -130,6 +138,7 @@ const AppNavigation: React.FC = () => {
         <Stack.Screen name="SoilHealthTips" component={SoilHealthTipsScreen} />
         <Stack.Screen name="SoilSuperheroStory" component={SoilSuperheroStoryScreen} />
         <Stack.Screen name="Checkout" component={Checkout} />
+        <Stack.Screen name="AddDevice" component={AddDeviceScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
