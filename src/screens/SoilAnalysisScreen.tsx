@@ -638,15 +638,15 @@ const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) =
       setIsRecLoading(true);
       try {
         const payload = {
-          nitrogen: soilData.Nitrogen,
-          phosphorus: soilData.Phosphorus,
-          potassium: soilData.Potassium,
-          ph: soilData.pH,
+          N: soilData.Nitrogen,
+          P: soilData.Phosphorus,
+          K: soilData.Potassium,
+          pH: soilData.pH,
           moisture: soilData.moisture,
           temperature: soilData.temperature
         };
         const res = await axios.post(
-          'https://httpsakayush-bot-fastapi.hf.space/recommend',
+          'http://192.168.113.210:8000/analyze',
           payload,
           { headers: { 'Content-Type': 'application/json' } }
         );
