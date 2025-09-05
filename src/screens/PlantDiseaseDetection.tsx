@@ -88,29 +88,8 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
     }
   };
 
-  // Fetch detailed diagnosis from Gemini AI
-  const fetchDiagnosis = async (diseaseName: string) => {
-    try {
-      setIsDiagnosing(true);
-      setDiagnosis(null);
-      
-      // Clean up the disease name (remove underscores, format properly)
-      const cleanDiseaseName = diseaseName.replace(/___/g, ' - ').replace(/_/g, ' ');
-      
-      const diagnosisResult = await getPlantDiagnosis(cleanDiseaseName);
-      setDiagnosis(diagnosisResult);
-    } catch (error) {
-      console.error('Error fetching diagnosis:', error);
-      Alert.alert(
-        'Diagnosis Error', 
-        'Failed to get detailed diagnosis. Please try again later.'
-      );
-    } finally {
-      setIsDiagnosing(false);
-    }
-  };
-
-  // Analyze image - (API format: {confidence, disease, success})
+  // Send image to your backend model for initial disease detection
+  // Send image to your backend model for initial disease detection
   const analyzeImage = async (imageUri?: string) => {
     try {
       setIsAnalyzing(true);
@@ -139,7 +118,7 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
       });
 
       setAnalysisResult(response.data);
-      
+
       // If a disease is detected and not healthy, fetch detailed diagnosis
       if (response.data?.disease && !response.data.disease.toLowerCase().includes('healthy')) {
         await fetchDiagnosis(response.data.disease);
@@ -164,6 +143,108 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
     }
   };
 
+
+
+
+
+  // Gemini API call helper
+  // Gemini API call helper
+const getGeminiDiagnosis = async (diseaseName: string) => {
+  try {
+    const prompt = `
+Provide a structured agricultural diagnosis for the plant disease: "${diseaseName}".
+Respond ONLY in JSON with this exact structure:
+
+{
+  "Summary": "...",
+  "remedies": {
+    "Diagnosis": {
+      "Disease": "...",
+      "Pathogen": "...",
+      "Hosts": "...",
+      "Symptoms": "...",
+      "Environmental Triggers": "..."
+    },
+    "Detailed Remedial Plan": {
+      "Immediate Action": "...",
+      "Traditional Remedy": "...",
+      "Natural/Organic Solution": "...",
+      "Modern/Synthetic Solution": "...",
+      "Cultural Practices": "..."
+    }
+  },
+  "product": {
+    "Curated Product List": [
+      {
+        "Product": "...",
+        "Active Ingredient": "...",
+        "Use Case": "...",
+        "Type": "...",
+        "Registration": "..."
+      }
+    ],
+    "Application Protocol": "..."
+  }
+}`;
+
+    const response = await axios.post(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+      { contents: [{ parts: [{ text: prompt }] }] },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": process.env.GEMINI_API_KEY,
+        },
+      }
+    );
+
+    const rawText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+
+    // Parse JSON safely (strip markdown fences if present)
+    try {
+      return JSON.parse(rawText);
+    } catch {
+      const cleaned = rawText
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+      return JSON.parse(cleaned);
+    }
+  } catch (err) {
+    console.error("Gemini API error:", err);
+    return null;
+  }
+};
+
+// Fetch detailed diagnosis from Gemini AI
+const fetchDiagnosis = async (diseaseName: string) => {
+  try {
+    setIsDiagnosing(true);
+    setDiagnosis(null);
+
+    // Clean up incoming disease name for clarity
+    const cleanDiseaseName = diseaseName
+      .replace(/___/g, " - ")
+      .replace(/_/g, " ");
+
+    const diagnosisResult = await getGeminiDiagnosis(cleanDiseaseName);
+
+    if (!diagnosisResult) {
+      Alert.alert("Diagnosis Error", "Failed to get detailed diagnosis from Gemini.");
+      return;
+    }
+
+    setDiagnosis(diagnosisResult);
+  } catch (error) {
+    console.error("Error fetching diagnosis:", error);
+    Alert.alert("Diagnosis Error", "Something went wrong. Try again later.");
+  } finally {
+    setIsDiagnosing(false);
+  }
+};
+
+
+
   // Handle captured image from floating scanner
   useEffect(() => {
     if (route?.params?.capturedImage) {
@@ -173,6 +254,7 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
       }, 500);
     }
   }, [route?.params?.capturedImage]);
+
 
   const handleTakePhoto = async () => {
     try {
@@ -267,23 +349,23 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
                 <Text style={styles.tipItem}>• Take clear, close-up photos</Text>
                 <Text style={styles.tipItem}>• Include leaves and stems</Text>
               </View>
-              
+
               {/* Manual Research Section */}
               <View style={styles.manualResearchSection}>
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.manualResearchToggle}
                   onPress={() => setShowManualInput(!showManualInput)}
                 >
-                  <Ionicons 
-                    name={showManualInput ? "chevron-up" : "chevron-down"} 
-                    size={20} 
-                    color={colors.primary} 
+                  <Ionicons
+                    name={showManualInput ? "chevron-up" : "chevron-down"}
+                    size={20}
+                    color={colors.primary}
                   />
                   <Text style={styles.manualResearchToggleText}>
                     Research a specific disease
                   </Text>
                 </TouchableOpacity>
-                
+
                 {showManualInput && (
                   <View style={styles.manualInputContainer}>
                     <TextInput
@@ -358,7 +440,7 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
                     </Text>
                   </View>
                 </View>
-                
+
                 {/* Manual diagnosis button */}
                 {analysisResult && !isDiagnosing && (
                   <View style={styles.manualDiagnosisSection}>
@@ -369,7 +451,7 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
                     />
                   </View>
                 )}
-                
+
                 {/* Diagnosis loading */}
                 {isDiagnosing && (
                   <View style={styles.diagnosisLoadingCard}>
@@ -379,7 +461,7 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
                     </Text>
                   </View>
                 )}
-                
+
                 {/* Detailed Diagnosis Results */}
                 {diagnosis && (
                   <ScrollView style={styles.diagnosisContainer} showsVerticalScrollIndicator={false}>
@@ -388,7 +470,7 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
                       <Text style={styles.diagnosisSectionTitle}>Summary</Text>
                       <Text style={styles.diagnosisText}>{diagnosis.Summary}</Text>
                     </View>
-                    
+
                     {/* Disease Information */}
                     <View style={styles.diagnosisSection}>
                       <Text style={styles.diagnosisSectionTitle}>Disease Information</Text>
@@ -413,7 +495,7 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
                         <Text style={styles.diagnosisDetailText}>{diagnosis.remedies.Diagnosis['Environmental Triggers']}</Text>
                       </View>
                     </View>
-                    
+
                     {/* Treatment Plan */}
                     <View style={styles.diagnosisSection}>
                       <Text style={styles.diagnosisSectionTitle}>Treatment Plan</Text>
@@ -438,7 +520,7 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
                         <Text style={styles.diagnosisTreatmentText}>{diagnosis.remedies['Detailed Remedial Plan']['Cultural Practices']}</Text>
                       </View>
                     </View>
-                    
+
                     {/* Recommended Products */}
                     <View style={styles.diagnosisSection}>
                       <Text style={styles.diagnosisSectionTitle}>Recommended Products</Text>
@@ -451,7 +533,7 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
                           <Text style={styles.productDetail}>Registration: {product.Registration}</Text>
                         </View>
                       ))}
-                      
+
                       <View style={styles.applicationProtocolCard}>
                         <Text style={styles.applicationProtocolTitle}>Application Protocol</Text>
                         <Text style={styles.applicationProtocolText}>{diagnosis.product['Application Protocol']}</Text>
@@ -463,7 +545,7 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
             )}
           </View>
         )}
-        
+
         {/* Global Diagnosis Loading Modal */}
         {isDiagnosing && (
           <View style={styles.globalLoadingOverlay}>
