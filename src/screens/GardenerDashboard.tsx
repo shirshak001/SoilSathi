@@ -145,6 +145,21 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
     section: {
       marginBottom: spacing.xl,
     },
+    gardenOverviewContainer: {
+      marginBottom: spacing.xl,
+    },
+    gardenOverviewTitle: {
+      fontSize: fontSize.lg,
+      fontWeight: fontWeight.bold,
+      color: colors.text.primary,
+      marginBottom: spacing.md,
+      textAlign: 'center',
+    },
+    gardenOverviewStats: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+    },
     sectionTitle: {
       fontSize: fontSize.lg,
       fontWeight: fontWeight.bold,
@@ -477,6 +492,7 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
       borderRadius: borderRadius.lg,
       padding: 20,
       marginBottom: spacing.lg,
+      alignItems: 'center',
     },
     quickAccessTitle: {
       fontSize: fontSize.lg,
@@ -487,11 +503,13 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
     },
     quickAccessGrid: {
       flexDirection: 'row',
-      justifyContent: 'space-around',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     quickAccessItem: {
       alignItems: 'center',
       flex: 10,
+      marginHorizontal: spacing.md,
     },
     quickAccessIcon: {
       width: 50,
@@ -808,32 +826,16 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
       </LinearGradient>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Quick Access Section */}
-        {renderQuickAccess()}
-
-        {/* Garden Overview Stats */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Garden Overview</Text>
-          <View style={styles.statsContainer}>
+        {/* Garden Overview Stats - moved to top */}
+        <View style={styles.gardenOverviewContainer}>
+          <Text style={styles.gardenOverviewTitle}>Garden Overview</Text>
+          <View style={styles.gardenOverviewStats}>
             {statsData.map(renderStatCard)}
           </View>
         </View>
 
-        {/* Kids Education Section */}
-        {renderSection(
-          'Kids Education Hub',
-          'school',
-          kidsEducationTools,
-          colors.secondary
-        )}
-
-        {/* Garden Planning Section */}
-        {renderSection(
-          'Garden Planning & Design',
-          'leaf',
-          gardenPlanningTools,
-          colors.primary
-        )}
+        {/* Quick Access Section - centered */}
+        {renderQuickAccess()}
 
         {/* Plant Health Section */}
         {renderSection(
@@ -851,6 +853,22 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
           colors.warning
         )}
 
+        {/* Garden Planning Section */}
+        {renderSection(
+          'Garden Planning & Design',
+          'leaf',
+          gardenPlanningTools,
+          colors.primary
+        )}
+
+        {/* Kids Education Section */}
+        {renderSection(
+          'Kids Education Hub',
+          'school',
+          kidsEducationTools,
+          colors.secondary
+        )}
+
         {/* Plant Care Reminders */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -859,41 +877,13 @@ const GardenerDashboard: React.FC<GardenerDashboardProps> = ({ navigation }) => 
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
           </View>
-          
           <View style={styles.remindersCard}>
             {plantCareReminders.map(renderPlantCareReminder)}
           </View>
         </View>
 
         {/* Weather Section */}
-        {/* <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Today's Weather</Text>
-          </View> */}
-          
-          {/* <View style={styles.weatherCard}>
-            <View style={styles.weatherMain}>
-              <Ionicons name="partly-sunny" size={48} color={colors.warning} />
-              <View style={styles.weatherInfo}>
-                <Text style={styles.temperature}>24°C</Text>
-                <Text style={styles.weatherDesc}>Partly Cloudy</Text>
-              </View>
-            </View>
-            <View style={styles.weatherDetails}>
-              <View style={styles.weatherDetail}>
-                <Ionicons name="water" size={16} color={colors.primary} />
-                <Text style={styles.weatherDetailText}>Humidity: 65%</Text>
-              </View>
-              <View style={styles.weatherDetail}>
-                <Ionicons name="leaf" size={16} color={colors.primary} />
-                <Text style={styles.weatherDetailText}>UV Index: 6</Text>
-              </View>
-            </View>
-            <Text style={styles.weatherTip}>
-              Good day for outdoor gardening! Consider watering in the evening.
-            </Text>
-          </View> */}
-        {/* </View> */}
+        {/* ...existing code... */}
       </ScrollView>
       <FloatingPlantScanner navigation={navigation} />
       <VoiceAssistant navigation={navigation} />

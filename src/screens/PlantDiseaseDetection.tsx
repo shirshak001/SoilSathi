@@ -10,6 +10,7 @@ import {
   Modal,
   Alert,
   ActivityIndicator,
+  TextInput,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,6 +18,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { colors, spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
 import CustomButton from '../components/CustomButton';
 import axios from 'axios';
+import { getPlantDiagnosis, DiagnosisResponse } from '../utils/api';
 
 interface PlantDiseaseDetectionProps {
   navigation: any;
@@ -35,6 +37,10 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<PlantAnalysis | null>(null);
   const [showImagePicker, setShowImagePicker] = useState(false);
+  const [diagnosis, setDiagnosis] = useState<DiagnosisResponse | null>(null);
+  const [isDiagnosing, setIsDiagnosing] = useState(false);
+  const [manualDiseaseName, setManualDiseaseName] = useState('');
+  const [showManualInput, setShowManualInput] = useState(false);
 
   // Helper function to get mime type from URI
   const getMimeType = (uri: string): string => {
@@ -82,6 +88,28 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
     }
   };
 
+  // Fetch detailed diagnosis from Gemini AI
+  const fetchDiagnosis = async (diseaseName: string) => {
+    try {
+      setIsDiagnosing(true);
+      setDiagnosis(null);
+      
+      // Clean up the disease name (remove underscores, format properly)
+      const cleanDiseaseName = diseaseName.replace(/___/g, ' - ').replace(/_/g, ' ');
+      
+      const diagnosisResult = await getPlantDiagnosis(cleanDiseaseName);
+      setDiagnosis(diagnosisResult);
+    } catch (error) {
+      console.error('Error fetching diagnosis:', error);
+      Alert.alert(
+        'Diagnosis Error', 
+        'Failed to get detailed diagnosis. Please try again later.'
+      );
+    } finally {
+      setIsDiagnosing(false);
+    }
+  };
+
   // Analyze image - (API format: {confidence, disease, success})
   const analyzeImage = async (imageUri?: string) => {
     try {
@@ -111,6 +139,11 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
       });
 
       setAnalysisResult(response.data);
+      
+      // If a disease is detected and not healthy, fetch detailed diagnosis
+      if (response.data?.disease && !response.data.disease.toLowerCase().includes('healthy')) {
+        await fetchDiagnosis(response.data.disease);
+      }
 
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -225,7 +258,6 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
               <CustomButton
                 title="Take Photo"
                 onPress={() => setShowImagePicker(true)}
-                icon="camera-outline"
                 style={styles.uploadButton}
               />
               <Text style={styles.tipsTitle}>Tips for best results:</Text>
@@ -234,6 +266,48 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
                 <Text style={styles.tipItem}>• Focus on affected areas</Text>
                 <Text style={styles.tipItem}>• Take clear, close-up photos</Text>
                 <Text style={styles.tipItem}>• Include leaves and stems</Text>
+              </View>
+              
+              {/* Manual Research Section */}
+              <View style={styles.manualResearchSection}>
+                <TouchableOpacity 
+                  style={styles.manualResearchToggle}
+                  onPress={() => setShowManualInput(!showManualInput)}
+                >
+                  <Ionicons 
+                    name={showManualInput ? "chevron-up" : "chevron-down"} 
+                    size={20} 
+                    color={colors.primary} 
+                  />
+                  <Text style={styles.manualResearchToggleText}>
+                    Research a specific disease
+                  </Text>
+                </TouchableOpacity>
+                
+                {showManualInput && (
+                  <View style={styles.manualInputContainer}>
+                    <TextInput
+                      style={styles.manualInput}
+                      placeholder="Enter disease name (e.g., 'Tomato Late Blight', 'Apple Scab')"
+                      value={manualDiseaseName}
+                      onChangeText={setManualDiseaseName}
+                      multiline={false}
+                    />
+                    <CustomButton
+                      title="Get Diagnosis"
+                      onPress={() => {
+                        if (manualDiseaseName.trim()) {
+                          fetchDiagnosis(manualDiseaseName.trim());
+                          setShowManualInput(false);
+                          setManualDiseaseName('');
+                        } else {
+                          Alert.alert('Error', 'Please enter a disease name');
+                        }
+                      }}
+                      style={styles.manualResearchButton}
+                    />
+                  </View>
+                )}
               </View>
             </View>
           </View>
@@ -284,8 +358,122 @@ const PlantDiseaseDetection = ({ navigation, route }: PlantDiseaseDetectionProps
                     </Text>
                   </View>
                 </View>
+                
+                {/* Manual diagnosis button */}
+                {analysisResult && !isDiagnosing && (
+                  <View style={styles.manualDiagnosisSection}>
+                    <CustomButton
+                      title="Get Detailed Analysis"
+                      onPress={() => fetchDiagnosis(analysisResult.disease)}
+                      style={styles.manualDiagnosisButton}
+                    />
+                  </View>
+                )}
+                
+                {/* Diagnosis loading */}
+                {isDiagnosing && (
+                  <View style={styles.diagnosisLoadingCard}>
+                    <ActivityIndicator size="large" color={colors.primary} />
+                    <Text style={styles.diagnosisLoadingText}>
+                      Getting detailed diagnosis and treatment recommendations...
+                    </Text>
+                  </View>
+                )}
+                
+                {/* Detailed Diagnosis Results */}
+                {diagnosis && (
+                  <ScrollView style={styles.diagnosisContainer} showsVerticalScrollIndicator={false}>
+                    {/* Summary */}
+                    <View style={styles.diagnosisSection}>
+                      <Text style={styles.diagnosisSectionTitle}>Summary</Text>
+                      <Text style={styles.diagnosisText}>{diagnosis.Summary}</Text>
+                    </View>
+                    
+                    {/* Disease Information */}
+                    <View style={styles.diagnosisSection}>
+                      <Text style={styles.diagnosisSectionTitle}>Disease Information</Text>
+                      <View style={styles.diagnosisDetailCard}>
+                        <Text style={styles.diagnosisDetailTitle}>Disease:</Text>
+                        <Text style={styles.diagnosisDetailText}>{diagnosis.remedies.Diagnosis.Disease}</Text>
+                      </View>
+                      <View style={styles.diagnosisDetailCard}>
+                        <Text style={styles.diagnosisDetailTitle}>Pathogen:</Text>
+                        <Text style={styles.diagnosisDetailText}>{diagnosis.remedies.Diagnosis.Pathogen}</Text>
+                      </View>
+                      <View style={styles.diagnosisDetailCard}>
+                        <Text style={styles.diagnosisDetailTitle}>Affected Plants:</Text>
+                        <Text style={styles.diagnosisDetailText}>{diagnosis.remedies.Diagnosis.Hosts}</Text>
+                      </View>
+                      <View style={styles.diagnosisDetailCard}>
+                        <Text style={styles.diagnosisDetailTitle}>Symptoms:</Text>
+                        <Text style={styles.diagnosisDetailText}>{diagnosis.remedies.Diagnosis.Symptoms}</Text>
+                      </View>
+                      <View style={styles.diagnosisDetailCard}>
+                        <Text style={styles.diagnosisDetailTitle}>Environmental Triggers:</Text>
+                        <Text style={styles.diagnosisDetailText}>{diagnosis.remedies.Diagnosis['Environmental Triggers']}</Text>
+                      </View>
+                    </View>
+                    
+                    {/* Treatment Plan */}
+                    <View style={styles.diagnosisSection}>
+                      <Text style={styles.diagnosisSectionTitle}>Treatment Plan</Text>
+                      <View style={styles.diagnosisTreatmentCard}>
+                        <Text style={styles.diagnosisTreatmentTitle}>🚨 Immediate Action</Text>
+                        <Text style={styles.diagnosisTreatmentText}>{diagnosis.remedies['Detailed Remedial Plan']['Immediate Action']}</Text>
+                      </View>
+                      <View style={styles.diagnosisTreatmentCard}>
+                        <Text style={styles.diagnosisTreatmentTitle}>🌿 Traditional Remedy</Text>
+                        <Text style={styles.diagnosisTreatmentText}>{diagnosis.remedies['Detailed Remedial Plan']['Traditional Remedy']}</Text>
+                      </View>
+                      <View style={styles.diagnosisTreatmentCard}>
+                        <Text style={styles.diagnosisTreatmentTitle}>🍃 Natural/Organic Solution</Text>
+                        <Text style={styles.diagnosisTreatmentText}>{diagnosis.remedies['Detailed Remedial Plan']['Natural/Organic Solution']}</Text>
+                      </View>
+                      <View style={styles.diagnosisTreatmentCard}>
+                        <Text style={styles.diagnosisTreatmentTitle}>💊 Modern/Synthetic Solution</Text>
+                        <Text style={styles.diagnosisTreatmentText}>{diagnosis.remedies['Detailed Remedial Plan']['Modern/Synthetic Solution']}</Text>
+                      </View>
+                      <View style={styles.diagnosisTreatmentCard}>
+                        <Text style={styles.diagnosisTreatmentTitle}>🌱 Cultural Practices</Text>
+                        <Text style={styles.diagnosisTreatmentText}>{diagnosis.remedies['Detailed Remedial Plan']['Cultural Practices']}</Text>
+                      </View>
+                    </View>
+                    
+                    {/* Recommended Products */}
+                    <View style={styles.diagnosisSection}>
+                      <Text style={styles.diagnosisSectionTitle}>Recommended Products</Text>
+                      {diagnosis.product['Curated Product List'].map((product, index) => (
+                        <View key={index} style={styles.diagnosisProductCard}>
+                          <Text style={styles.diagnosisProductName}>{product.Product}</Text>
+                          <Text style={styles.productDetail}>Active Ingredient: {product['Active Ingredient']}</Text>
+                          <Text style={styles.productDetail}>Use Case: {product['Use Case']}</Text>
+                          <Text style={styles.productDetail}>Type: {product.Type}</Text>
+                          <Text style={styles.productDetail}>Registration: {product.Registration}</Text>
+                        </View>
+                      ))}
+                      
+                      <View style={styles.applicationProtocolCard}>
+                        <Text style={styles.applicationProtocolTitle}>Application Protocol</Text>
+                        <Text style={styles.applicationProtocolText}>{diagnosis.product['Application Protocol']}</Text>
+                      </View>
+                    </View>
+                  </ScrollView>
+                )}
               </View>
             )}
+          </View>
+        )}
+        
+        {/* Global Diagnosis Loading Modal */}
+        {isDiagnosing && (
+          <View style={styles.globalLoadingOverlay}>
+            <View style={styles.globalLoadingCard}>
+              <ActivityIndicator size="large" color={colors.primary} />
+              <Text style={styles.globalLoadingTitle}>Getting Expert Analysis</Text>
+              <Text style={styles.globalLoadingSubtitle}>
+                Our AI agricultural expert is analyzing the disease and preparing detailed treatment recommendations...
+              </Text>
+            </View>
           </View>
         )}
       </ScrollView>
@@ -1012,6 +1200,199 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     lineHeight: 18,
     marginBottom: spacing.xs / 2,
+  },
+  // Diagnosis styles
+  diagnosisLoadingCard: {
+    backgroundColor: colors.surface,
+    borderRadius: borderRadius.md,
+    padding: spacing.lg,
+    marginTop: spacing.md,
+    alignItems: 'center',
+    elevation: 2,
+    shadowColor: colors.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  diagnosisLoadingText: {
+    fontSize: fontSize.md,
+    color: colors.text.secondary,
+    textAlign: 'center',
+    marginTop: spacing.md,
+  },
+  diagnosisContainer: {
+    marginTop: spacing.md,
+    maxHeight: 600,
+  },
+  diagnosisSection: {
+    backgroundColor: colors.surface,
+    borderRadius: borderRadius.md,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+    elevation: 2,
+    shadowColor: colors.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  diagnosisSectionTitle: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.bold,
+    color: colors.primary,
+    marginBottom: spacing.md,
+  },
+  diagnosisText: {
+    fontSize: fontSize.md,
+    color: colors.text.primary,
+    lineHeight: 22,
+  },
+  diagnosisDetailCard: {
+    backgroundColor: colors.background,
+    borderRadius: borderRadius.sm,
+    padding: spacing.md,
+    marginBottom: spacing.sm,
+  },
+  diagnosisDetailTitle: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.bold,
+    color: colors.primary,
+    marginBottom: spacing.xs,
+  },
+  diagnosisDetailText: {
+    fontSize: fontSize.sm,
+    color: colors.text.secondary,
+    lineHeight: 20,
+  },
+  diagnosisTreatmentCard: {
+    backgroundColor: colors.background,
+    borderRadius: borderRadius.sm,
+    padding: spacing.md,
+    marginBottom: spacing.sm,
+    borderLeftWidth: 4,
+    borderLeftColor: colors.primary,
+  },
+  diagnosisTreatmentTitle: {
+    fontSize: fontSize.md,
+    fontWeight: fontWeight.bold,
+    color: colors.text.primary,
+    marginBottom: spacing.xs,
+  },
+  diagnosisTreatmentText: {
+    fontSize: fontSize.sm,
+    color: colors.text.secondary,
+    lineHeight: 20,
+  },
+  diagnosisProductCard: {
+    backgroundColor: colors.background,
+    borderRadius: borderRadius.sm,
+    padding: spacing.md,
+    marginBottom: spacing.sm,
+    borderWidth: 1,
+    borderColor: colors.primary + '20',
+  },
+  diagnosisProductName: {
+    fontSize: fontSize.md,
+    fontWeight: fontWeight.bold,
+    color: colors.primary,
+    marginBottom: spacing.xs,
+  },
+  productDetail: {
+    fontSize: fontSize.sm,
+    color: colors.text.secondary,
+    marginBottom: spacing.xs / 2,
+  },
+  applicationProtocolCard: {
+    backgroundColor: colors.surface,
+    borderRadius: borderRadius.sm,
+    padding: spacing.md,
+    marginTop: spacing.sm,
+    borderWidth: 2,
+    borderColor: colors.accent,
+  },
+  applicationProtocolTitle: {
+    fontSize: fontSize.md,
+    fontWeight: fontWeight.bold,
+    color: colors.accent,
+    marginBottom: spacing.sm,
+  },
+  applicationProtocolText: {
+    fontSize: fontSize.sm,
+    color: colors.text.primary,
+    lineHeight: 20,
+  },
+  manualDiagnosisSection: {
+    marginTop: spacing.md,
+    paddingHorizontal: spacing.md,
+  },
+  manualDiagnosisButton: {
+    backgroundColor: colors.accent,
+  },
+  manualResearchSection: {
+    marginTop: spacing.lg,
+    borderTopWidth: 1,
+    borderTopColor: colors.primary + '20',
+    paddingTop: spacing.md,
+  },
+  manualResearchToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: spacing.md,
+  },
+  manualResearchToggleText: {
+    fontSize: fontSize.md,
+    color: colors.primary,
+    fontWeight: fontWeight.semibold,
+    marginLeft: spacing.sm,
+  },
+  manualInputContainer: {
+    marginTop: spacing.md,
+  },
+  manualInput: {
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderRadius: borderRadius.md,
+    padding: spacing.md,
+    fontSize: fontSize.md,
+    color: colors.text.primary,
+    backgroundColor: colors.surface,
+    marginBottom: spacing.md,
+    minHeight: 50,
+  },
+  manualResearchButton: {
+    backgroundColor: colors.primary,
+  },
+  globalLoadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  globalLoadingCard: {
+    backgroundColor: colors.surface,
+    borderRadius: borderRadius.lg,
+    padding: spacing.xl,
+    margin: spacing.lg,
+    alignItems: 'center',
+    maxWidth: '80%',
+  },
+  globalLoadingTitle: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.bold,
+    color: colors.text.primary,
+    marginTop: spacing.md,
+    textAlign: 'center',
+  },
+  globalLoadingSubtitle: {
+    fontSize: fontSize.sm,
+    color: colors.text.secondary,
+    marginTop: spacing.sm,
+    textAlign: 'center',
+    lineHeight: 20,
   },
 });
 
