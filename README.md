@@ -1,4 +1,4 @@
-# 🌱 SoilSathi - Smart Agricultural Technology Platform
+# SoilSathi - Smart Agricultural Technology Platform
 
 ![SoilSathi Banner](https://img.shields.io/badge/SoilSathi-Agricultural%20Technology-green?style=for-the-badge&logo=leaf&logoColor=white)
 
@@ -9,94 +9,359 @@
 
 > **"Empowering farmers with intelligent technology for sustainable agriculture"**
 
-SoilSathi is a comprehensive agricultural technology platform designed to help farmers make informed decisions about their crops, manage their fields efficiently, and leverage modern technology for sustainable farming practices.
+SoilSathi is a comprehensive agricultural technology platform designed to help farmers and gardeners make informed decisions about their crops, manage their fields efficiently, and leverage modern technology for sustainable farming practices. The application serves both farmers managing large fields and gardeners with smaller plots, providing tailored tools for each user type.
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-- [🌟 Features](#-features)
-- [🎯 Key Components](#-key-components)
-- [🚀 Getting Started](#-getting-started)
-- [📱 Installation](#-installation)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [🏗️ Project Structure](#️-project-structure)
-- [🎨 Design System](#-design-system)
-- [🌍 Multilingual Support](#-multilingual-support)
-- [📸 Screenshots](#-screenshots)
-- [🔧 Development](#-development)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-
----
-
-## 🌟 Features
-
-### 🗣️ **Voice Assistant**
-- **Smart Voice Commands**: Navigate the app using natural language
-- **Multilingual Support**: Supports 7 languages including Hindi, English, Tamil, Bengali, Telugu, Punjabi, and Kannada
-- **Contextual Responses**: Time-aware greetings and farming advice
-- **Hands-free Operation**: Perfect for farmers working in the field
-
-### 🚜 **Field Management System**
-- **Complete Field Overview**: Monitor all fields from a centralized dashboard
-- **Real-time Status Tracking**: Visual indicators for field health (healthy, warning, critical)
-- **Activity Management**: Schedule and track farming activities (watering, fertilizing, harvesting)
-- **Crop Information**: Detailed tracking of crop types, planting dates, and soil types
-- **Smart Notifications**: Alerts for upcoming and overdue farming tasks
-
-### 🌤️ **Weather Forecast Integration**
-- **Real-time Weather Data**: Current conditions with temperature, humidity, wind speed, UV index
-- **5-Day Forecast**: Extended weather predictions for better planning
-- **Weather Alerts**: Proactive notifications for adverse weather conditions
-- **Intelligent Farming Advice**: Weather-based recommendations for farming activities
-
-### � **Plant Health Monitoring**
-- **Disease Detection**: AI-powered plant disease identification using camera
-- **Soil Analysis**: Comprehensive soil health assessment tools
-- **Plant Care Reminders**: Automated scheduling for plant care activities
-- **Expert Recommendations**: Professional guidance for crop management
-
-### 🚁 **Drone Services**
-- **Drone Booking**: Schedule drone services for spraying and monitoring
-- **Service History**: Track all drone service activities
-- **Real-time Updates**: Live status updates for booked services
-
-### 🛒 **Agricultural Marketplace**
-- **Product Store**: Browse and purchase farming supplies
-- **Secure Checkout**: Integrated payment system
-- **Order Tracking**: Monitor delivery status
-
-### 👥 **Community Platform**
-- **Farmer Network**: Connect with other farmers
-- **Knowledge Sharing**: Share experiences and best practices
-- **Expert Advice**: Access to agricultural experts
+- [Features Overview](#features-overview)
+- [Main Features](#main-features)
+- [User Types](#user-types)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Design System](#design-system)
+- [Multilingual Support](#multilingual-support)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
-## 🎯 Key Components
+## Features Overview
 
-### 📱 **Mobile Application**
-- **Cross-platform**: Built with React Native and Expo
-- **Responsive Design**: Optimized for various screen sizes
-- **Offline Capability**: Core features work without internet
-- **Push Notifications**: Real-time alerts and reminders
+SoilSathi is packed with numerous features designed to revolutionize agricultural practices through technology. Here's a comprehensive list of features available in the application:
 
-### 🎨 **User Interface**
-- **Modern Design**: Clean, intuitive interface with agricultural theming
-- **Accessibility**: High contrast, proper touch targets, screen reader support
-- **Smooth Animations**: Engaging user experience with fluid transitions
-- **Dark/Light Themes**: Adaptive theme system
+### Voice Assistant
+- Smart voice commands for hands-free navigation
+- Multilingual support for 7 languages
+- Contextual responses with time-aware greetings
+- Voice tutorial system for new users
 
-### 🔊 **Voice Technology**
-- **Speech Recognition**: Convert speech to commands
-- **Text-to-Speech**: Audio feedback in multiple languages
-- **Natural Language Processing**: Understand farming-specific terminology
-- **Contextual Understanding**: Smart interpretation of user intents
+### Field Management System
+- Centralized dashboard for field monitoring
+- Real-time status tracking with visual health indicators
+- Activity scheduling for farming tasks
+- Crop information tracking with soil type data
+- Smart notifications for farming activities
+
+### Weather Forecast System
+- Real-time weather data display
+- 5-day weather forecast
+- Weather alerts for adverse conditions
+- Weather-based farming recommendations
+- Location-based weather services
+
+### Reports & Analytics
+- Key metrics dashboard with yield and revenue tracking
+- Period selection for weekly/monthly/yearly reports
+- Interactive data visualization
+- Detailed report categories for crop performance, finances, and resources
+
+### Plant Health Management
+- AI-powered plant disease detection
+- Soil analysis and health assessment
+- Plant care reminders and scheduling
+- Expert recommendations for crop management
+
+### User Experience
+- Dual user interface for farmers and gardeners
+- Theme toggling between light and dark modes
+- Multi-language support
+- Accessibility features
+
+### Community Features
+- Farmer/gardener networking
+- Knowledge sharing platform
+- Expert access for professional advice
+- Social mapping for gardeners
+
+### Additional Services
+- Drone service booking and history tracking
+- Agricultural marketplace with secure checkout
+- Government schemes information
+- Privacy and security settings
+
+### Educational Content
+- Soil superhero story mode for children
+- Interactive learning games
+- Soil health tips and advisory content
+- Seasonal gardening suggestions
 
 ---
 
-## 🚀 Getting Started
+## Main Features
+
+### 1. Voice Assistant
+The intelligent voice-controlled feature allows users to navigate through the app using voice commands in multiple languages. The system provides audio feedback and supports hands-free operation, making it perfect for farmers working in the field.
+- **Supported Commands**: Weather, soil analysis, plant disease, water schedule, drone service, etc.
+- **Languages**: English, Hindi, Tamil, Bengali, Telugu, Punjabi, and Kannada
+- **Component**: `src/components/VoiceAssistant.tsx`
+
+### 2. Field Management System
+A comprehensive system to monitor and manage agricultural fields with real-time status tracking, activity scheduling, and smart notifications.
+- **Dashboard**: Complete field overview with health indicators
+- **Activity Management**: Schedule watering, fertilizing, harvesting, etc.
+- **Smart Notifications**: Alerts for upcoming and overdue tasks
+- **Component**: `src/screens/FieldManagementScreen.tsx`
+
+### 3. Weather Forecast Integration
+Provides detailed weather information with agricultural recommendations based on current and forecasted conditions.
+- **Current Weather**: Temperature, humidity, wind speed, UV index
+- **Forecasting**: 5-day weather predictions with hourly breakdown
+- **Farming Advice**: Weather-based agricultural recommendations
+- **Component**: `src/components/WeatherForecast.tsx`
+
+### 4. Reports & Analytics
+Comprehensive reporting system that provides insights into farming operations, crop performance, and resource utilization.
+- **Key Metrics**: Yield, revenue, crop health, water usage
+- **Period Selection**: Weekly, monthly, yearly reporting
+- **Visualization**: Interactive charts and graphs
+- **Component**: `src/components/ReportsAnalytics.tsx`
+
+### 5. Plant Disease Detection
+AI-powered system that identifies plant diseases through camera images and provides treatment recommendations.
+- **Disease Identification**: Camera-based AI analysis
+- **Treatment Advice**: Expert recommendations for disease management
+- **Product Suggestions**: Recommended treatments and products
+- **Component**: `src/screens/PlantDiseaseDetection.tsx`
+
+### 6. Soil Analysis
+Tools for comprehensive soil health assessment including nutrient levels, pH balance, and improvement recommendations.
+- **Soil Health Testing**: Analysis of soil composition
+- **Advisory Content**: Recommendations for soil improvement
+- **Historical Tracking**: Soil health trends over time
+- **Component**: `src/screens/SoilAnalysisScreen.tsx`
+
+---
+
+## User Types
+
+SoilSathi caters to two primary user types, each with tailored features:
+
+### Farmers
+- Large field management
+- Crop yield optimization
+- Drone services for field monitoring
+- Government schemes information
+- Commercial agriculture analytics
+
+### Gardeners
+- Small plot management
+- Garden zones planning
+- Seasonal aesthetic suggestions
+- Indoor plant care
+- Social community mapping
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
+- Expo CLI
+- Android Studio or Xcode (for mobile development)
+
+### Installation
+
+Clone the repository and install dependencies:
+
+```bash
+# Clone the repository
+git clone https://github.com/shirshak001/SoilSathi.git
+
+# Navigate to the project directory
+cd SoilSathi
+
+# Install dependencies
+npm install
+# or
+yarn install
+
+# Start the development server
+npm start
+# or
+yarn start
+```
+
+## Tech Stack
+
+SoilSathi is built using modern technologies to ensure performance, reliability, and scalability:
+
+### Frontend
+- **React Native (v0.79.6)**: Core framework for cross-platform mobile development
+- **Expo (v53.0.22)**: Development platform for building and deploying React Native applications
+- **TypeScript (v5.8.3)**: Typed JavaScript for improved development experience
+
+### UI/UX
+- **React Navigation**: Navigation library for screen transitions
+- **Expo Vector Icons**: Icon set for UI elements
+- **React Native Gesture Handler**: Touch and gesture handling
+- **Expo Linear Gradient**: Gradient effects for weather and theme elements
+
+### API & Data
+- **Axios**: HTTP client for API requests
+- **AsyncStorage**: Local data storage solution
+- **Google Generative AI**: AI capabilities for plant disease detection
+
+### Media & Location
+- **Expo Camera**: Camera access for plant scanning
+- **Expo Location**: GPS and location services
+- **Expo Speech**: Text-to-speech functionality
+- **Expo AV**: Audio/video playback for tutorials
+
+## Project Structure
+
+The SoilSathi project is organized into a clear directory structure:
+
+```
+SoilSathi/
+├── assets/                  # Static assets like icons and images
+├── src/                     # Source code
+│   ├── components/          # Reusable UI components
+│   ├── constants/           # App constants and theme definitions
+│   ├── contexts/            # React context providers
+│   ├── navigation/          # Navigation configuration
+│   ├── screens/             # App screens
+│   └── utils/               # Utility functions and helpers
+├── App.tsx                  # Main application component
+├── app.json                 # Expo configuration
+├── babel.config.js          # Babel configuration
+├── metro.config.js          # Metro bundler configuration
+├── package.json             # Dependencies and scripts
+└── tsconfig.json            # TypeScript configuration
+```
+
+### Key Directories
+
+#### components/
+Contains reusable UI components used throughout the application:
+- `ChatBot.tsx` - AI-powered chat assistance
+- `CustomButton.tsx` - Standardized button component
+- `FieldSummary.tsx` - Field overview component
+- `FloatingPlantScanner.tsx` - Camera access for plant scanning
+- `VoiceAssistant.tsx` - Voice control interface
+- `WeatherForecast.tsx` - Weather display component
+
+#### screens/
+Contains all application screens:
+- User authentication screens (`LoginScreenFarmer.tsx`, `SignUpScreenFarmer.tsx`)
+- Dashboard screens (`FarmerDashboard.tsx`, `GardenerDashboard.tsx`)
+- Feature screens (`SoilAnalysisScreen.tsx`, `PlantDiseaseDetection.tsx`)
+- Settings and configuration screens (`SettingsScreen.tsx`, `ProfileScreen.tsx`)
+
+#### contexts/
+Provides application-wide state management:
+- `LanguageContext.tsx` - Multilingual support
+- `ThemeContext.tsx` - Light/dark theme toggle
+
+## Design System
+
+SoilSathi implements a consistent design system that enhances user experience:
+
+### Themes
+- **Light Mode**: Bright, field-inspired color scheme
+- **Dark Mode**: Low-light optimized UI for evening use
+- **Theme Configuration**: Located in `src/constants/theme.ts`
+
+### UI Components
+- **Custom Buttons**: Standardized interactive elements
+- **Input Fields**: Consistent form elements
+- **Cards**: Information display components
+- **Modal Dialogs**: Popup notifications and alerts
+
+## Development
+
+### Running the App
+
+To start the development server:
+
+```bash
+# Start Expo development server
+npm start
+# or
+yarn start
+```
+
+Then choose the platform to run on:
+- Press `a` to run on Android Emulator
+- Press `i` to run on iOS Simulator
+- Scan QR code with Expo Go app on physical device
+
+### Available Scripts
+
+The following npm/yarn scripts are available:
+
+- `npm start` - Start the development server
+- `npm run android` - Run on Android device/emulator
+- `npm run ios` - Run on iOS simulator
+- `npm run web` - Run in web browser
+
+### Development Environment
+
+For the best development experience:
+
+1. Install VS Code with React Native extensions
+2. Set up Android Studio and/or Xcode
+3. Configure Expo development tools
+4. Install the Expo Go app on physical devices for testing
+
+## Feature Documentation
+
+Detailed documentation for key features is available in markdown files:
+
+- `VOICE_ASSISTANT.md` - Voice commands and multilingual support
+- `FIELD_MANAGEMENT_WEATHER.md` - Field management and weather system
+- `REPORTS_WEATHER_LOCATION.md` - Analytics and location services
+- `UPDATES_SUMMARY.md` - Summary of recent app updates
+
+## User Flows
+
+### Farmer User Flow
+1. **Login/Signup**: Authentication through farmer-specific login
+2. **Dashboard**: View field status, weather, and activity overview
+3. **Field Management**: Monitor and manage multiple fields
+4. **Soil Analysis**: Analyze soil health and receive recommendations
+5. **Drone Services**: Book and track drone services
+6. **Reports**: View farming analytics and performance metrics
+
+### Gardener User Flow
+1. **Login/Signup**: Authentication through gardener-specific login
+2. **Dashboard**: View garden zones, plant health, and weather
+3. **Garden Planner**: Plan and manage garden layouts
+4. **Plant Care**: Monitor plant health and care schedules
+5. **Community**: Connect with other gardeners and view social map
+6. **Seasonal Suggestions**: Receive season-specific gardening advice
+
+## Contributing
+
+We welcome contributions to SoilSathi! Here's how you can help:
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add some amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+Please ensure your code follows the project's coding standards and includes appropriate tests.
+
+## License
+
+SoilSathi is licensed under the 0BSD License - see the LICENSE file for details.
+
+---
+
+## Contact
+
+For questions, feedback, or support, please reach out to the development team or open an issue on the repository.
+
+---
+
+Built with ❤️ for sustainable agriculture
+
 
 ### Prerequisites
 
