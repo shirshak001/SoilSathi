@@ -34,6 +34,14 @@ SoilSathi is a comprehensive agricultural technology platform designed to help f
 
 SoilSathi is packed with numerous features designed to revolutionize agricultural practices through technology. Here's a comprehensive list of features available in the application:
 
+### Advanced Analytics and Research
+- **Predictive Models (LSTM, CNN)** for vegetation stress analysis
+- **Market Price Tracker** with real-time mandi price integration
+- **Researcher/Agronomist Mode** with advanced dashboard for experts
+- **Temporal plots, trend analysis, and anomaly reports**
+- **Export options** for data in CSV, PDF, Excel, and JSON formats
+- **Spectral Health Maps & Risk Zones** with push alerts for critical issues
+
 ### Voice Assistant
 - Smart voice commands for hands-free navigation
 - Multilingual support for 7 languages

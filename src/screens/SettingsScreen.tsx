@@ -165,7 +165,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
                 { 
                   text: translations.settings.signOut, 
                   style: 'destructive',
-                  onPress: () => navigation.navigate('Login')
+                  onPress: () => navigation.navigate('UserTypeSelection')
                 }
               ]
             );

@@ -353,6 +353,24 @@ const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ navigation }) => {
       icon: 'bar-chart',
       onPress: () => navigation.navigate('ReportsAnalyticsScreen'),
     },
+    {
+      title: 'Predictive Models',
+      subtitle: 'View crop predictions',
+      icon: 'trending-up',
+      onPress: () => navigation.navigate('PredictiveModels'),
+    },
+    {
+      title: 'Market Price Tracker',
+      subtitle: 'Track crop prices',
+      icon: 'cash',
+      onPress: () => navigation.navigate('MarketPriceTracker'),
+    },
+    {
+      title: 'Feedback Loop',
+      subtitle: 'Provide feedback',
+      icon: 'chatbubble-ellipses',
+      onPress: () => navigation.navigate('FeedbackLoop'),
+    },
   ];
 
   

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,22 +6,184 @@ import {
   TouchableOpacity,
   StatusBar,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
+import { spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
 import CustomButton from '../components/CustomButton';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface UserTypeSelectionScreenProps {
   navigation: any;
 }
 
-type UserType = 'farmer' | 'gardener' | null;
+type UserType = 'farmer' | 'gardener' | 'researcher' | null;
 
 const { width } = Dimensions.get('window');
 
 const UserTypeSelectionScreen: React.FC<UserTypeSelectionScreenProps> = ({ navigation }) => {
   const [selectedUserType, setSelectedUserType] = useState<UserType>(null);
+  const { theme, isDark, toggleTheme } = useTheme();
+  const { colors } = theme;
+  
+  const getStyles = () => StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    headerGradient: {
+      paddingTop: StatusBar.currentHeight || spacing.xl,
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: spacing.lg,
+      paddingHorizontal: spacing.lg,
+    },
+    logoContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    appName: {
+      fontSize: fontSize.xl,
+      fontWeight: fontWeight.bold,
+      color: colors.surface,
+      marginLeft: spacing.sm,
+    },
+    content: {
+      flex: 1,
+      padding: spacing.lg,
+    },
+    title: {
+      fontSize: fontSize.title,
+      fontWeight: fontWeight.bold,
+      color: colors.text.primary,
+      textAlign: 'center',
+      marginBottom: spacing.sm,
+    },
+    subtitle: {
+      fontSize: fontSize.md,
+      color: colors.text.secondary,
+      textAlign: 'center',
+      marginBottom: spacing.xl,
+      lineHeight: 22,
+    },
+    cardsContainer: {
+      flex: 1,
+      gap: spacing.md,
+    },
+    userTypeCard: {
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.lg,
+      padding: spacing.lg,
+      borderWidth: 2,
+      borderColor: colors.border,
+      elevation: 2,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      position: 'relative',
+      marginBottom: spacing.md,
+    },
+    selectedCard: {
+      borderColor: colors.primary,
+      backgroundColor: colors.primary,
+    },
+    cardContent: {
+      alignItems: 'center',
+    },
+    iconContainer: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: colors.background,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: spacing.md,
+    },
+    selectedIconContainer: {
+      backgroundColor: colors.primaryDark,
+    },
+    cardTitle: {
+      fontSize: fontSize.xl,
+      fontWeight: fontWeight.bold,
+      color: colors.text.primary,
+      marginBottom: spacing.xs,
+    },
+    selectedCardTitle: {
+      color: colors.surface,
+    },
+    cardDescription: {
+      fontSize: fontSize.sm,
+      color: colors.text.secondary,
+      textAlign: 'center',
+      marginBottom: spacing.md,
+      lineHeight: 20,
+    },
+    selectedCardDescription: {
+      color: colors.surface,
+      opacity: 0.9,
+    },
+    featuresContainer: {
+      width: '100%',
+    },
+    featureItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: spacing.xs,
+      paddingHorizontal: spacing.sm,
+    },
+    featureText: {
+      fontSize: fontSize.sm,
+      color: colors.text.secondary,
+      marginLeft: spacing.sm,
+      flex: 1,
+    },
+    selectedFeatureText: {
+      color: colors.surface,
+    },
+    selectedIndicator: {
+      position: 'absolute',
+      top: spacing.md,
+      right: spacing.md,
+    },
+    continueButton: {
+      marginTop: spacing.lg,
+      marginBottom: spacing.md,
+    },
+    skipContainer: {
+      alignItems: 'center',
+      paddingVertical: spacing.sm,
+    },
+    skipText: {
+      fontSize: fontSize.md,
+      color: colors.text.hint,
+      fontWeight: fontWeight.medium,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    scrollViewContent: {
+      flexGrow: 1,
+    },
+    modeToggle: {
+      padding: spacing.sm,
+      borderRadius: borderRadius.full,
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      height: 40,
+      width: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  });
+  
+  const styles = getStyles();
 
   const userTypes = [
     {
@@ -47,6 +209,18 @@ const UserTypeSelectionScreen: React.FC<UserTypeSelectionScreenProps> = ({ navig
         'Seasonal planning',
         'Water conservation'
       ]
+    },
+    {
+      id: 'researcher',
+      title: 'Researcher',
+      description: 'Agricultural research and data analysis',
+      icon: 'flask',
+      features: [
+        'Data collection',
+        'Spectral analysis',
+        'Research modeling',
+        'Scientific reporting'
+      ]
     }
   ];
 
@@ -55,6 +229,8 @@ const UserTypeSelectionScreen: React.FC<UserTypeSelectionScreenProps> = ({ navig
       navigation.navigate('LoginFarmer');
     } else if (selectedUserType === 'gardener') {
       navigation.navigate('LoginGardener');
+    } else if (selectedUserType === 'researcher') {
+      navigation.navigate('ResearcherDashboard');
     }
   };
 
@@ -137,10 +313,25 @@ const UserTypeSelectionScreen: React.FC<UserTypeSelectionScreenProps> = ({ navig
             <Ionicons name="leaf" size={32} color={colors.surface} />
             <Text style={styles.appName}>SoilSathi</Text>
           </View>
+          <TouchableOpacity
+            style={styles.modeToggle}
+            onPress={toggleTheme}
+          >
+            <Ionicons 
+              name={isDark ? "sunny" : "moon"} 
+              size={24} 
+              color={colors.surface} 
+            />
+          </TouchableOpacity>
         </View>
       </LinearGradient>
 
-      <View style={styles.content}>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.content}>
         <Text style={styles.title}>Choose Your Profile</Text>
         <Text style={styles.subtitle}>
           Select the option that best describes your irrigation needs
@@ -165,146 +356,9 @@ const UserTypeSelectionScreen: React.FC<UserTypeSelectionScreenProps> = ({ navig
           <Text style={styles.skipText}>Skip for now</Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  headerGradient: {
-    paddingTop: StatusBar.currentHeight || spacing.xl,
-  },
-  header: {
-    alignItems: 'center',
-    paddingVertical: spacing.lg,
-    paddingHorizontal: spacing.lg,
-  },
-  logoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  appName: {
-    fontSize: fontSize.xl,
-    fontWeight: fontWeight.bold,
-    color: colors.surface,
-    marginLeft: spacing.sm,
-  },
-  content: {
-    flex: 1,
-    padding: spacing.lg,
-  },
-  title: {
-    fontSize: fontSize.title,
-    fontWeight: fontWeight.bold,
-    color: colors.text.primary,
-    textAlign: 'center',
-    marginBottom: spacing.sm,
-  },
-  subtitle: {
-    fontSize: fontSize.md,
-    color: colors.text.secondary,
-    textAlign: 'center',
-    marginBottom: spacing.xl,
-    lineHeight: 22,
-  },
-  cardsContainer: {
-    flex: 1,
-    gap: spacing.md,
-  },
-  userTypeCard: {
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.lg,
-    padding: spacing.lg,
-    borderWidth: 2,
-    borderColor: colors.border,
-    elevation: 2,
-    shadowColor: colors.shadow,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    position: 'relative',
-  },
-  selectedCard: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primary,
-  },
-  cardContent: {
-    alignItems: 'center',
-  },
-  iconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: colors.background,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: spacing.md,
-  },
-  selectedIconContainer: {
-    backgroundColor: colors.primaryDark,
-  },
-  cardTitle: {
-    fontSize: fontSize.xl,
-    fontWeight: fontWeight.bold,
-    color: colors.text.primary,
-    marginBottom: spacing.xs,
-  },
-  selectedCardTitle: {
-    color: colors.surface,
-  },
-  cardDescription: {
-    fontSize: fontSize.sm,
-    color: colors.text.secondary,
-    textAlign: 'center',
-    marginBottom: spacing.md,
-    lineHeight: 20,
-  },
-  selectedCardDescription: {
-    color: colors.surface,
-    opacity: 0.9,
-  },
-  featuresContainer: {
-    width: '100%',
-  },
-  featureItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: spacing.xs,
-    paddingHorizontal: spacing.sm,
-  },
-  featureText: {
-    fontSize: fontSize.sm,
-    color: colors.text.secondary,
-    marginLeft: spacing.sm,
-    flex: 1,
-  },
-  selectedFeatureText: {
-    color: colors.surface,
-  },
-  selectedIndicator: {
-    position: 'absolute',
-    top: spacing.md,
-    right: spacing.md,
-  },
-  continueButton: {
-    marginTop: spacing.lg,
-    marginBottom: spacing.md,
-  },
-  skipContainer: {
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-  },
-  skipText: {
-    fontSize: fontSize.md,
-    color: colors.text.hint,
-    fontWeight: fontWeight.medium,
-  },
-});
 
 export default UserTypeSelectionScreen;

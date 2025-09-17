@@ -59,7 +59,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation 
   };
 
   const navigateToLogin = () => {
-    navigation.navigate('Login');
+    navigation.navigate('UserTypeSelection');
   };
 
   if (isEmailSent) {

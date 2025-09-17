@@ -78,7 +78,7 @@ const LoginScreenFarmer: React.FC<LoginScreenProps> = ({ navigation }) => {
   };
 
   const navigateToSignup = () => {
-    navigation.navigate('Signup');
+    navigation.navigate('SignupFarmer');
   };
 
   const navigateToForgotPassword = () => {

@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreenFarmer from '../screens/LoginScreenFarmer';
 import LoginScreenGardener from '../screens/LoginScreenGardener';
 import SignupScreenGardener from '../screens/SignupScreenGardener';
-import SignupScreenFarmer from '../screens/SignupScreenGardener';
+import SignupScreenFarmer from '../screens/SignUpScreenFarmer';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import UserTypeSelectionScreen from '../screens/UserTypeSelectionScreen';
 import FarmerDashboard from '../screens/FarmerDashboard';
@@ -37,6 +37,13 @@ import ARSoilExplorerScreen from '../screens/ARSoilExplorerScreen';
 import SoilHealthTipsScreen from '../screens/SoilHealthTipsScreen';
 import SoilSuperheroStoryScreen from '../screens/SoilSuperheroStoryScreen';
 import AddDeviceScreen from '../screens/AddDeviceScreen';
+// New screens
+import PredictiveModelsScreen from '../screens/PredictiveModelsScreen';
+import MarketPriceTrackerScreen from '../screens/MarketPriceTrackerScreen';
+import ResearcherDashboardScreen from '../screens/ResearcherDashboardScreen';
+import SpectralHealthMapsScreen from '../screens/SpectralHealthMapsScreen';
+import DataExportScreen from '../screens/DataExportScreen';
+import FeedbackLoopScreen from '../screens/FeedbackLoopScreen';
 
 export type RootStackParamList = {
   LoginFarmer: undefined;
@@ -64,7 +71,7 @@ export type RootStackParamList = {
   GardenZones: undefined;
   Community: undefined;
   FieldManagement: undefined;
-  WeatherForecastScreen: undefined;
+  WeatherForecastScreen: { gardenerId?: string } | undefined;
   ReportsAnalyticsScreen: undefined;
   VirtualGardenPlanner: undefined;
   IndoorPlantCareMode: undefined;
@@ -88,6 +95,13 @@ export type RootStackParamList = {
     }>;
     total: number;
   };
+  // New screens
+  PredictiveModels: undefined;
+  MarketPriceTracker: undefined;
+  ResearcherDashboard: undefined;
+  SpectralHealthMaps: undefined;
+  DataExport: undefined;
+  FeedbackLoop: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -139,6 +153,14 @@ const AppNavigation: React.FC = () => {
         <Stack.Screen name="SoilSuperheroStory" component={SoilSuperheroStoryScreen} />
         <Stack.Screen name="Checkout" component={Checkout} />
         <Stack.Screen name="AddDevice" component={AddDeviceScreen} />
+        
+        {/* New screens */}
+        <Stack.Screen name="PredictiveModels" component={PredictiveModelsScreen} />
+        <Stack.Screen name="MarketPriceTracker" component={MarketPriceTrackerScreen} />
+        <Stack.Screen name="ResearcherDashboard" component={ResearcherDashboardScreen} />
+        <Stack.Screen name="SpectralHealthMaps" component={SpectralHealthMapsScreen} />
+        <Stack.Screen name="DataExport" component={DataExportScreen} />
+        <Stack.Screen name="FeedbackLoop" component={FeedbackLoopScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

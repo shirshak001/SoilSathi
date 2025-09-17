@@ -92,7 +92,7 @@ const SignupScreenFarmer: React.FC<SignupScreenProps> = ({ navigation }) => {
   };
 
   const navigateToLogin = () => {
-    navigation.navigate('Login');
+    navigation.navigate('LoginFarmer');
   };
 
   return (

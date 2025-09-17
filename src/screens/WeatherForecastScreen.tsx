@@ -40,8 +40,12 @@ interface WeatherData {
 }
 
 interface WeatherForecastProps {
-  gardenerId: string; // Pass logged-in gardener ID
-  onPress?: () => void;
+  navigation: any;
+  route?: {
+    params?: {
+      gardenerId?: string;
+    };
+  };
 }
 
 const { width } = Dimensions.get("window");
@@ -49,12 +53,14 @@ const { width } = Dimensions.get("window");
 const OPENWEATHER_API_KEY = process.env.EXPO_PUBLIC_OPENWEATHER_API_KEY;
 
 const WeatherForecast: React.FC<WeatherForecastProps> = ({
-  gardenerId,
-  onPress,
+  navigation,
+  route,
 }) => {
   const { theme } = useTheme();
   const { language } = useLanguage();
   const colors = theme.colors;
+  
+  const gardenerId = route?.params?.gardenerId;
 
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -177,7 +183,7 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({
   }
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.sectionTitle}>
@@ -231,7 +237,7 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({
         />
         <Text style={styles.adviceText}>{getWeatherAdvice()}</Text>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
