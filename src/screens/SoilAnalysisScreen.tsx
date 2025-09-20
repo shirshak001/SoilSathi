@@ -16,6 +16,10 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors, spacing, borderRadius, fontSize, fontWeight } from '../constants/theme';
 import CustomButton from '../components/CustomButton';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 interface SoilAnalysisScreenProps {
   navigation: any;
@@ -41,7 +45,7 @@ interface Product {
 
 interface Recommendation {
   id: string;
-  type: 'fertilizer' | 'water' | 'ph' | 'general';
+  type: string; // changed to generic string
   title: string;
   description: string;
   urgency: 'low' | 'medium' | 'high';
@@ -51,81 +55,57 @@ interface Recommendation {
 const { width } = Dimensions.get('window');
 const cardWidth = (width - spacing.lg * 3) / 2;
 
-const hardcodedRecs: Recommendation[] = [
-    {
-      id: "rec1",
-      type: "water",
-      title: "Immediate Irrigation Needed",
-      description:
-        "Soil moisture is at 0%. Immediate watering is required to prevent crop stress and damage.",
-      urgency: "high",
-      products: [
-        {
-          id: "p1",
-          name: "Drip Irrigation Kit",
-          price: 1500,
-          description: "Efficient water delivery system for crops.",
-          image: "https://example.com/images/drip-kit.jpg",
-        },
-        {
-          id: "p2",
-          name: "Soil Moisture Retaining Gel",
-          price: 500,
-          description: "Helps retain water in dry soil conditions.",
-          image: "https://example.com/images/retaining-gel.jpg",
-        },
-      ],
-    },
-    {
-      id: "rec2",
-      type: "general",
-      title: "Protect Crops from Heat Stress",
-      description:
-        "Temperature is 34.3 °C, which can cause heat stress. Use shade nets or intercropping to reduce direct sun exposure.",
-      urgency: "medium",
-      products: [
-        {
-          id: "p3",
-          name: "Shade Net (50%)",
-          price: 1200,
-          description: "Protects crops from direct heat and sunburn.",
-          image: "https://example.com/images/shade-net.jpg",
-        },
-      ],
-    },
-    {
-      id: "rec3",
-      type: "fertilizer",
-      title: "Improve Soil Water Retention",
-      description:
-        "Low soil moisture suggests poor retention. Add organic compost or vermicompost to enhance soil structure and water-holding capacity.",
-      urgency: "medium",
-      products: [
-        {
-          id: "p4",
-          name: "Organic Compost",
-          price: 800,
-          description: "Improves soil health and water retention.",
-          image: "https://example.com/images/compost.jpg",
-        },
-        {
-          id: "p5",
-          name: "Vermicompost",
-          price: 600,
-          description: "Natural fertilizer that boosts soil fertility.",
-          image: "https://example.com/images/vermicompost.jpg",
-        },
-      ],
-    },
-    {
-      id: "rec4",
-      type: "general",
-      title: "Smart Irrigation Scheduling",
-      description:
-        "Schedule irrigation in the early morning or evening to reduce evaporation losses at high temperature.",
-      urgency: "low",
-    },
-  ];
+async function reformatToJSON(backendText: string) {
+  try {
+    const parsed = JSON.parse(backendText);
+    if (parsed.recommendations) {
+      return parsed;
+    }
+  } catch (_) {}
+
+  const prompt = `
+  Convert the following recommendations into structured JSON.
+  Schema:
+  {
+    "recommendations": [
+      {
+        "id": "string",
+        "type": "string",
+        "title": "string",
+        "description": "string",
+        "urgency": "string",
+        "products": [
+          {
+            "id": "string",
+            "name": "string",
+            "price": number | null,
+            "description": "string",
+            "image": "string | null"
+          }
+        ]
+      }
+    ]
+  }
+
+  IMPORTANT:
+  - Return ONLY valid JSON.
+  - Do not include markdown fences or extra text.
+
+  Text:
+  """${backendText}"""
+  `;
+
+  try {
+    const result = await model.generateContent(prompt);
+    let raw = result.response.text();
+    raw = raw.replace(/```json/g, "").replace(/```/g, "").trim();
+    console.log("raw value:", raw);
+    return JSON.parse(raw);
+  } catch (err) {
+    console.error("Gemini JSON parse error:", err);
+    return { recommendations: [] };
+  }
+}
 
 const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) => {
   const [soilData, setSoilData] = useState<SoilData | null>(null);
@@ -133,18 +113,12 @@ const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) =
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [isRecLoading, setIsRecLoading] = useState(false);
 
-  // Format timestamp to "X hours Y minutes ago"
   const formatTimeAgo = (timestamp: string): string => {
     const now = new Date();
     const updated = new Date(timestamp);
-    
-    // Calculate time difference in milliseconds
     const diffMs = now.getTime() - updated.getTime();
-    
-    // Convert to hours and minutes
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    
     if (diffHours === 0) {
       return `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
     } else {
@@ -152,7 +126,6 @@ const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) =
     }
   };
 
-  // Fetch soil sensor data
   useEffect(() => {
     const fetchSoilData = async () => {
       try {
@@ -166,16 +139,11 @@ const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) =
         );
 
         const deviceId = userRes.data.user.deviceId;
-
         const sensorRes = await axios.get(
           `https://soilsathi-backend.onrender.com/api/v1/sensor/getData/${deviceId}`
         );
 
-        // console.log(sensorRes.data.data);
-
         setSoilData(sensorRes.data.data);
-        console.log("\nSoil data",soilData?.soilMoisture);
-
       } catch (err) {
         console.error('Error fetching soil data:', err);
       } finally {
@@ -188,13 +156,10 @@ const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) =
     return () => clearInterval(interval);
   }, []);
 
-  // Fetch recommendations
-  // Fetch recommendations (hardcoded)
-useEffect(() => {
+  useEffect(() => {
     const fetchRecommendations = async () => {
       if (!soilData) return;
       setIsRecLoading(true);
-      console.log(soilData);
       try {
         const payload = {
           crop: "rice",
@@ -209,17 +174,17 @@ useEffect(() => {
         };
 
         const res = await axios.post(
-          'http://192.168.156.210:8000/analyze',
+          'http://192.168.113.210:8000/analyze',
           payload,
           { headers: { 'Content-Type': 'application/json' } }
         );
-        console.log(res.data);
-
-        setRecommendations(res.data.recommendations || hardcodedRecs);
-        console.log(recommendations);
+        const backendResponse = res.data.recommendations;
+        const formatted = await reformatToJSON(backendResponse);
+        console.log("formatted:", formatted);
+        setRecommendations(formatted.recommendations || []);
       } catch (err) {
         console.error('Recommendation API error:', err);
-        setRecommendations(hardcodedRecs);
+        setRecommendations([]);
       } finally {
         setIsRecLoading(false);
       }
@@ -227,7 +192,6 @@ useEffect(() => {
 
     fetchRecommendations();
   }, [soilData]);
-
 
   const getStatusColor = (value: number, optimal: [number, number]) => {
     if (value >= optimal[0] && value <= optimal[1]) return colors.success;
@@ -259,8 +223,7 @@ useEffect(() => {
         </View>
         <Text style={styles.parameterTitle}>{title}</Text>
         <Text style={styles.parameterValue}>
-          {value}
-          {unit}
+          {value}{unit}
         </Text>
         <Text style={[styles.parameterStatus, { color: statusColor }]}>{status}</Text>
       </View>
@@ -277,11 +240,6 @@ useEffect(() => {
           <View style={[styles.urgencyBadge, { backgroundColor: urgencyColor }]}>
             <Text style={styles.urgencyText}>{rec.urgency.toUpperCase()}</Text>
           </View>
-          <Ionicons
-            name={rec.type === 'water' ? 'water' : rec.type === 'fertilizer' ? 'leaf' : 'information-circle'}
-            size={20}
-            color={colors.primary}
-          />
         </View>
         <Text style={styles.recommendationTitle}>{rec.title}</Text>
         <Text style={styles.recommendationDescription}>{rec.description}</Text>
@@ -349,7 +307,9 @@ useEffect(() => {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Current Soil Conditions</Text>
-          <Text style={styles.lastUpdated}>Last updated: {soilData?.updatedAt ? formatTimeAgo(soilData.updatedAt) : 'N/A'}</Text>
+          <Text style={styles.lastUpdated}>
+            Last updated: {soilData?.updatedAt ? formatTimeAgo(soilData.updatedAt) : 'N/A'}
+          </Text>
         </View>
 
         <View style={styles.parametersGrid}>
@@ -363,21 +323,29 @@ useEffect(() => {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Smart Recommendations</Text>
-          <Text style={styles.sectionSubtitle}>Based on your soil analysis, here's what your plants need</Text>
+          <Text style={styles.sectionSubtitle}>
+            Based on your soil analysis, here's what your plants need
+          </Text>
         </View>
 
         <View style={styles.recommendationsContainer}>
           {isRecLoading ? (
             <ActivityIndicator size="large" color={colors.primary} />
           ) : recommendations.length === 0 ? (
-            <Text style={{ color: colors.text.secondary, fontSize: fontSize.sm }}>No recommendations yet.</Text>
+            <Text style={{ color: colors.text.secondary, fontSize: fontSize.sm }}>
+              No recommendations yet.
+            </Text>
           ) : (
             recommendations.map(renderRecommendation)
           )}
         </View>
 
         <View style={styles.actionButtons}>
-          <CustomButton title="View Plant Store" variant="primary" onPress={() => navigation.navigate('ProductStore')} />
+          <CustomButton
+            title="View Plant Store"
+            variant="primary"
+            onPress={() => navigation.navigate('ProductStore')}
+          />
         </View>
       </ScrollView>
     </View>
