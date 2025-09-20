@@ -25,10 +25,10 @@ interface SoilData {
   Nitrogen: number;
   Phosphorus: number;
   Potassium: number;
-  moisture: number;
+  soilMoisture: number;
   pH: number;
   temperature: number;
-  lastUpdated: string;
+  updatedAt: string;
 }
 
 interface Product {
@@ -51,11 +51,106 @@ interface Recommendation {
 const { width } = Dimensions.get('window');
 const cardWidth = (width - spacing.lg * 3) / 2;
 
+const hardcodedRecs: Recommendation[] = [
+    {
+      id: "rec1",
+      type: "water",
+      title: "Immediate Irrigation Needed",
+      description:
+        "Soil moisture is at 0%. Immediate watering is required to prevent crop stress and damage.",
+      urgency: "high",
+      products: [
+        {
+          id: "p1",
+          name: "Drip Irrigation Kit",
+          price: 1500,
+          description: "Efficient water delivery system for crops.",
+          image: "https://example.com/images/drip-kit.jpg",
+        },
+        {
+          id: "p2",
+          name: "Soil Moisture Retaining Gel",
+          price: 500,
+          description: "Helps retain water in dry soil conditions.",
+          image: "https://example.com/images/retaining-gel.jpg",
+        },
+      ],
+    },
+    {
+      id: "rec2",
+      type: "general",
+      title: "Protect Crops from Heat Stress",
+      description:
+        "Temperature is 34.3 °C, which can cause heat stress. Use shade nets or intercropping to reduce direct sun exposure.",
+      urgency: "medium",
+      products: [
+        {
+          id: "p3",
+          name: "Shade Net (50%)",
+          price: 1200,
+          description: "Protects crops from direct heat and sunburn.",
+          image: "https://example.com/images/shade-net.jpg",
+        },
+      ],
+    },
+    {
+      id: "rec3",
+      type: "fertilizer",
+      title: "Improve Soil Water Retention",
+      description:
+        "Low soil moisture suggests poor retention. Add organic compost or vermicompost to enhance soil structure and water-holding capacity.",
+      urgency: "medium",
+      products: [
+        {
+          id: "p4",
+          name: "Organic Compost",
+          price: 800,
+          description: "Improves soil health and water retention.",
+          image: "https://example.com/images/compost.jpg",
+        },
+        {
+          id: "p5",
+          name: "Vermicompost",
+          price: 600,
+          description: "Natural fertilizer that boosts soil fertility.",
+          image: "https://example.com/images/vermicompost.jpg",
+        },
+      ],
+    },
+    {
+      id: "rec4",
+      type: "general",
+      title: "Smart Irrigation Scheduling",
+      description:
+        "Schedule irrigation in the early morning or evening to reduce evaporation losses at high temperature.",
+      urgency: "low",
+    },
+  ];
+
 const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) => {
   const [soilData, setSoilData] = useState<SoilData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [isRecLoading, setIsRecLoading] = useState(false);
+
+  // Format timestamp to "X hours Y minutes ago"
+  const formatTimeAgo = (timestamp: string): string => {
+    const now = new Date();
+    const updated = new Date(timestamp);
+    
+    // Calculate time difference in milliseconds
+    const diffMs = now.getTime() - updated.getTime();
+    
+    // Convert to hours and minutes
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (diffHours === 0) {
+      return `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
+    } else {
+      return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
+    }
+  };
 
   // Fetch soil sensor data
   useEffect(() => {
@@ -76,7 +171,11 @@ const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) =
           `https://soilsathi-backend.onrender.com/api/v1/sensor/getData/${deviceId}`
         );
 
+        // console.log(sensorRes.data.data);
+
         setSoilData(sensorRes.data.data);
+        console.log("\nSoil data",soilData?.soilMoisture);
+
       } catch (err) {
         console.error('Error fetching soil data:', err);
       } finally {
@@ -90,30 +189,37 @@ const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) =
   }, []);
 
   // Fetch recommendations
-  useEffect(() => {
+  // Fetch recommendations (hardcoded)
+useEffect(() => {
     const fetchRecommendations = async () => {
       if (!soilData) return;
       setIsRecLoading(true);
+      console.log(soilData);
       try {
         const payload = {
+          crop: "rice",
           N: soilData.Nitrogen,
           P: soilData.Phosphorus,
           K: soilData.Potassium,
           pH: soilData.pH,
-          moisture: soilData.moisture,
+          moisture: soilData.soilMoisture,
+          humidity: 60,
+          rainfall: 200,
           temperature: soilData.temperature,
         };
 
         const res = await axios.post(
-          'http://192.168.113.210:8000/analyze',
+          'http://192.168.156.210:8000/analyze',
           payload,
           { headers: { 'Content-Type': 'application/json' } }
         );
+        console.log(res.data);
 
-        setRecommendations(res.data.recommendations || []);
+        setRecommendations(res.data.recommendations || hardcodedRecs);
+        console.log(recommendations);
       } catch (err) {
         console.error('Recommendation API error:', err);
-        setRecommendations([]);
+        setRecommendations(hardcodedRecs);
       } finally {
         setIsRecLoading(false);
       }
@@ -121,6 +227,7 @@ const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) =
 
     fetchRecommendations();
   }, [soilData]);
+
 
   const getStatusColor = (value: number, optimal: [number, number]) => {
     if (value >= optimal[0] && value <= optimal[1]) return colors.success;
@@ -242,14 +349,14 @@ const SoilAnalysisScreen: React.FC<SoilAnalysisScreenProps> = ({ navigation }) =
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Current Soil Conditions</Text>
-          <Text style={styles.lastUpdated}>Last updated: {soilData?.lastUpdated}</Text>
+          <Text style={styles.lastUpdated}>Last updated: {soilData?.updatedAt ? formatTimeAgo(soilData.updatedAt) : 'N/A'}</Text>
         </View>
 
         <View style={styles.parametersGrid}>
           {renderSoilParameter('Nitrogen (N)', soilData?.Nitrogen || 0, '%', 'leaf', [60, 80])}
           {renderSoilParameter('Phosphorus (P)', soilData?.Phosphorus || 0, '%', 'flower', [50, 70])}
           {renderSoilParameter('Potassium (K)', soilData?.Potassium || 0, '%', 'nutrition', [50, 70])}
-          {renderSoilParameter('Soil Moisture', soilData?.moisture || 0, '%', 'water', [40, 60])}
+          {renderSoilParameter('Soil Moisture', soilData?.soilMoisture || 0, '%', 'water', [40, 60])}
           {renderSoilParameter('pH Level', soilData?.pH || 0, '', 'flask', [6, 7.5])}
           {renderSoilParameter('Temperature', soilData?.temperature || 0, '°C', 'thermometer', [20, 30])}
         </View>

@@ -1303,8 +1303,8 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
   },
   diagnosisContainer: {
+
     marginTop: spacing.md,
-    maxHeight: 600,
   },
   diagnosisSection: {
     backgroundColor: colors.surface,
